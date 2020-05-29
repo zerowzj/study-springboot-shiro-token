@@ -5,7 +5,6 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +46,11 @@ public class ShiroCfg {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        //Realm
+        //（▲）Realm
         manager.setRealm(customRealm);
-        //Subject工厂
+        //（▲）Subject工厂
         manager.setSubjectFactory(subjectFactory);
-        //禁用Session作为存储策略的实现
+        //（▲）禁用Session作为存储策略的实现
         DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) manager.getSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
         storageEvaluator.setSessionStorageEnabled(false);
@@ -63,25 +62,25 @@ public class ShiroCfg {
         return manager;
     }
 
-    @Bean("shiroFilter")
+    @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
-
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
         //（▲）过滤器
         Map<String, Filter> filterMap = factoryBean.getFilters();
-        filterMap.put("authctest", customAuthFilter);
+        filterMap.put("statelessAuthc", customAuthFilter);
         //（▲）
+        factoryBean.setSuccessUrl("/welcome");           //认证成功
         factoryBean.setLoginUrl("/unauthorized");        //未认证
-        factoryBean.setSuccessUrl("/welcome");           //
         factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
-        //（▲）设置规则
+        //（▲）设置规则，使用LinkedHashMap，因为拦截有先后顺序
         Map<String, String> filterChainDefinition = Maps.newLinkedHashMap();
+        //登录接口不需要认证
         filterChainDefinition.put("/login", "anon");
-        filterChainDefinition.put("/**", "authctest");
+        //其他资源地址全部需要通过代理登录步骤，注意顺序，必须先进过无状态代理登录后，后面的权限和角色认证才能使用
+        filterChainDefinition.put("/**", "statelessAuthc");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinition);
-
         return factoryBean;
     }
 //

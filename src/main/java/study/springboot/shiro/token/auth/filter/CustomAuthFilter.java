@@ -48,9 +48,11 @@ public class CustomAuthFilter extends AccessControlFilter {
             subject.login(authToken);
         } catch (UnknownAccountException ex) {
             log.debug(ex.getLocalizedMessage());
+            throw ex;
         } catch (Exception ex) {
             log.error(ex.getLocalizedMessage(), ex);
             //登录失败不用处理后面的过滤器会处理并且能通过@ControllerAdvice统一处理相关异常
+            throw ex;
         }
         return true;
     }

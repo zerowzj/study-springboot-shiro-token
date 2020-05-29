@@ -18,9 +18,9 @@ public class LoginController {
     public Result login(@RequestBody Map<String, Object> param) {
         String token = "12312";
 
-        CustomAuthToken authToken = new CustomAuthToken(token);
-        SecurityUtils.getSubject()
-                .login(authToken);
+//        CustomAuthToken authToken = new CustomAuthToken(token);
+//        SecurityUtils.getSubject()
+//                .login(authToken);
         //
         Map<String, Object> data = Maps.newHashMap();
         data.put("token", token);
