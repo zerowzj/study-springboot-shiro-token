@@ -16,6 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomRealm extends AuthorizingRealm {
 
+    /**
+     * 权限认证
+     *
+     * @param principalCollection
+     * @return AuthorizationInfo
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         log.info("============ 用户授权 ==============");
@@ -30,6 +36,13 @@ public class CustomRealm extends AuthorizingRealm {
         return info;
     }
 
+    /**
+     * 登录认证
+     *
+     * @param authenticationToken
+     * @return AuthenticationInfo
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();

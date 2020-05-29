@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import study.springboot.shiro.token.auth.realm.CustomRealm;
+import study.springboot.shiro.token.auth.session.ShiroSessionManager;
 
 import java.util.Map;
 
@@ -17,28 +18,18 @@ public class ShiroCfg {
     @Autowired
     private CustomRealm customRealm;
 
-    @Bean("securityManager")
-    public SecurityManager securityManager() {
-        DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        manager.setRealm(customRealm);
-        // 自定义session管理 使用redis
-//        SessionConfig sessionConfig = new SessionConfig();
-//        sessionConfig.setSessionDAO(sessionDaoConfig);
-//        //sessionConfig.setSessionDAO(new SessionDaoConfig());
-//        manager.setSessionManager(sessionConfig);
-        // 自定义缓存实现 使用redis
-        //def.setCacheManager();
-        return manager;
-    }
-
     @Bean("shirFilter")
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
-        //未认证
-        factoryBean.setLoginUrl("/Unauthorized");
-        //未授权
-        factoryBean.setUnauthorizedUrl("/unauthorized");
+        //安全管理器
+        factoryBean.setSecurityManager(securityManager);
 
+        //
+        factoryBean.setLoginUrl("/unauthorized");        //未认证
+        factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
+        factoryBean.setSuccessUrl("/welcome");
+
+        //设置规则
         Map<String, String> filterChainMap = Maps.newLinkedHashMap();
         //配置不会被拦截的链接 顺序判断
         filterChainMap.put("/static/**", "anon");
@@ -50,7 +41,21 @@ public class ShiroCfg {
         filterChainMap.put("/test", "authc,roles[admin]");
         filterChainMap.put("/**", "authc");
         factoryBean.setFilterChainDefinitionMap(filterChainMap);
-        factoryBean.setSecurityManager(securityManager);
+
         return factoryBean;
     }
+
+
+    @Bean("securityManager")
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
+        manager.setRealm(customRealm);
+        // 自定义session管理 使用redis
+        ShiroSessionManager sessionManager = null;
+        manager.setSessionManager(sessionManager);
+        // 自定义缓存实现 使用redis
+        //def.setCacheManager();
+        return manager;
+    }
+
 }
