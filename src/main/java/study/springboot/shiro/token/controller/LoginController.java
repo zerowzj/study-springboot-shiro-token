@@ -17,8 +17,11 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result login() {
+        //
         UsernamePasswordToken token = new UsernamePasswordToken();
+        //
         Subject subject = SecurityUtils.getSubject();
+        //
         subject.login(token);
         //设置session时间
         subject.getSession()
@@ -26,7 +29,7 @@ public class LoginController {
         Serializable sessionId = subject.getSession().getId();
         Map<String, Object> data = Maps.newHashMap();
         data.put("token", sessionId);
-        return Results.success();
+        return Results.success(data);
     }
 
     @PostMapping("/logout")
