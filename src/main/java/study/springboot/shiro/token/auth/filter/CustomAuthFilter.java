@@ -39,8 +39,7 @@ public class CustomAuthFilter extends AccessControlFilter {
         log.info(">>>>>>>>>> onAccessDenied");
         //==============================该步骤主要是通过token代理登录shiro======================
         //获取参数中的token值，里取的参数中的token你也可以将token放于head等
-        String token = WebUtils.toHttp(request)
-                .getHeader(X_TOKEN);
+        String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
         //生成无状态Token然后代理登录
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {

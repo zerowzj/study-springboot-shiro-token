@@ -56,20 +56,20 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info("##################执行Shiro登陆认证##################");
         CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
-        // 通过表单接收的用户名
+        //通过表单接收的用户名
         String token = (String) customAuthToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token无效");
         }
         //根据 Token 获取用户信息
-        UserInfo userInfo = null;
+        UserInfo userInfo = new UserInfo();
         if (userInfo == null) {
             throw new UnknownAccountException("token无效");
         }
         //创建 Shiro 的用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入 UserInfo 对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
-        SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(userInfo, userInfo, getName());
+        SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(token, customAuthToken, getName());
         return authInfo;
     }
 }
