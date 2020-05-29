@@ -26,7 +26,7 @@ public class CustomAuthFilter extends AccessControlFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response,
                                       Object mappedValue) throws Exception {
-        log.info("isAccessAllowedisAccessAllowedisAccessAllowed");
+        log.info(">>>>>>>>>> isAccessAllowed");
         return false;
     }
 
@@ -36,6 +36,7 @@ public class CustomAuthFilter extends AccessControlFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        log.info(">>>>>>>>>> onAccessDenied");
         //==============================该步骤主要是通过token代理登录shiro======================
         //获取参数中的token值，里取的参数中的token你也可以将token放于head等
         String token = WebUtils.toHttp(request)
