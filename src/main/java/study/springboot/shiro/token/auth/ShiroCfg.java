@@ -22,11 +22,10 @@ public class ShiroCfg {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
-
         //（▲）
         factoryBean.setLoginUrl("/unauthorized");        //未认证
+        factoryBean.setSuccessUrl("/welcome");           //
         factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
-        factoryBean.setSuccessUrl("/welcome");
 
         //（▲）设置规则
         Map<String, String> filterChainMap = Maps.newLinkedHashMap();
