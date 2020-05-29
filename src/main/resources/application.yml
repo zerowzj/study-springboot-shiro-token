@@ -1,0 +1,17 @@
+#
+server:
+  port: 7000
+#
+logging:
+  config: classpath:logback.xml
+#####################
+#（★）Spring
+#####################
+spring:
+  application:
+    name: study-springboot-shiro-token
+  main:
+    web-application-type: servlet
+    banner-mode: 'off'
+  profiles:
+    active: @env@
