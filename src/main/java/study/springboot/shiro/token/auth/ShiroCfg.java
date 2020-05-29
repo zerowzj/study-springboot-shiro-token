@@ -31,16 +31,6 @@ public class ShiroCfg {
     @Autowired
     private CustomAuthFilter customAuthFilter;
 
-    @Bean
-    public CustomAuthFilter customAuthFilter() {
-        return new CustomAuthFilter();
-    }
-
-    @Bean
-    public CustomRealm realm() {
-        return new CustomRealm();
-    }
-
     /**
      * SessionManager通过sessionValidationSchedulerEnabled禁用掉会话调度器
      * 因为我们禁用掉了会话，所以没必要再定期过期会话了
@@ -55,10 +45,10 @@ public class ShiroCfg {
     }
 
     @Bean
-    public SecurityManager defaultWebSecurityManager() {
+    public SecurityManager securityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        //
-        manager.setRealm(realm());
+        //Realm
+        manager.setRealm(customRealm);
         //Subject工厂
         manager.setSubjectFactory(subjectFactory);
         //禁用Session作为存储策略的实现
@@ -73,30 +63,30 @@ public class ShiroCfg {
         return manager;
     }
 
-    @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    @Bean("shiroFilter")
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 
         //（▲）安全管理器
-        factoryBean.setSecurityManager(defaultWebSecurityManager());
+        factoryBean.setSecurityManager(securityManager);
         //（▲）过滤器
         Map<String, Filter> filterMap = factoryBean.getFilters();
-        filterMap.put("authctest", customAuthFilter());
+        filterMap.put("authctest", customAuthFilter);
         //（▲）
         factoryBean.setLoginUrl("/unauthorized");        //未认证
         factoryBean.setSuccessUrl("/welcome");           //
         factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
         //（▲）设置规则
-        Map<String, String> filterChainMap = Maps.newLinkedHashMap();
-        filterChainMap.put("/login", "anon");
-        filterChainMap.put("/**", "authctest");
-        factoryBean.setFilterChainDefinitionMap(filterChainMap);
+        Map<String, String> filterChainDefinition = Maps.newLinkedHashMap();
+        filterChainDefinition.put("/login", "anon");
+        filterChainDefinition.put("/**", "authctest");
+        factoryBean.setFilterChainDefinitionMap(filterChainDefinition);
 
         return factoryBean;
     }
-
-    @Bean("lifecycleBeanPostProcessor")
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
+//
+//    @Bean("lifecycleBeanPostProcessor")
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
 }

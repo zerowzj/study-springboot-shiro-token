@@ -17,7 +17,7 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  * （★）主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
-//@Component
+@Component
 public class CustomRealm extends AuthorizingRealm {
 
     /**

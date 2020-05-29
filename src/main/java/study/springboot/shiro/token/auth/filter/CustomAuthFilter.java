@@ -12,7 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @Slf4j
-//@Component
+@Component
 public class CustomAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
@@ -31,15 +31,15 @@ public class CustomAuthFilter extends AccessControlFilter {
     }
 
     /**
-     * onAccessDenied：表示当访问拒绝时是否已经处理了；
-     * 如果返回true表示需要继续处理；
-     * 如果返回false表示该拦截器实例已经处理了，将直接返回即可。
+     * onAccessDenied：表示当访问拒绝时是否已经处理了
+     * 如果返回true表示需要继续处理；如果返回false表示该拦截器实例已经处理了，将直接返回即可
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         //==============================该步骤主要是通过token代理登录shiro======================
         //获取参数中的token值，里取的参数中的token你也可以将token放于head等
-        String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
+        String token = WebUtils.toHttp(request)
+                .getHeader(X_TOKEN);
         //生成无状态Token然后代理登录
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {
