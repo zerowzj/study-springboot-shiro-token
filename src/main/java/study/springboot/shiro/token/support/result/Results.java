@@ -1,6 +1,9 @@
 package study.springboot.shiro.token.support.result;
 
-public class Results {
+public final class Results {
+
+    private Results() {
+    }
 
     public static Result success() {
         Result rst = new Result();

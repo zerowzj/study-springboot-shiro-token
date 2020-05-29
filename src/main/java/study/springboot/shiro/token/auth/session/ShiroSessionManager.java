@@ -22,6 +22,8 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
 
     private static final String X_TOKEN = "x-token";
 
+    private static final String REFERENCED_SESSION_ID_SOURCE = "Stateless request";
+
     public ShiroSessionManager() {
         super();
         //设置 shiro session 失效时间，默认为30分钟，这里现在设置为15分钟
@@ -35,10 +37,9 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
         if (StringUtils.isEmpty(sessionId)) {
             //如果没有携带id参数则按照父类的方式在cookie进行获取sessionId
             return super.getSessionId(request, response);
-
         } else {
             //请求头中如果有 authToken, 则其值为sessionId
-//            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, REFERENCED_SESSION_ID_SOURCE);
+            request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, REFERENCED_SESSION_ID_SOURCE);
             //sessionId
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, sessionId);
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);

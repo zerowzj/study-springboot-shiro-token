@@ -27,6 +27,8 @@ public class LoginController {
         subject.getSession()
                 .setTimeout(1000 * 60 * 30);
         Serializable sessionId = subject.getSession().getId();
+
+        //
         Map<String, Object> data = Maps.newHashMap();
         data.put("token", sessionId);
         return Results.success(data);

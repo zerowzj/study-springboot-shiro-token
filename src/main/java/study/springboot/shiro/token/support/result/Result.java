@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-public class Result<T> implements Serializable {
+public final class Result<T> implements Serializable {
 
     private String code;
 
