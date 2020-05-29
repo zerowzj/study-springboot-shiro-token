@@ -22,7 +22,6 @@ public class CorsCfg {
         return corsCfg;
     }
 
-
     @Bean
     public CorsFilter corsFilter(CorsConfiguration corsCfg) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -3,9 +3,11 @@ package study.springboot.shiro.token.support.result;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
-public class Result<T> {
+public class Result<T> implements Serializable {
 
     private String code;
 
