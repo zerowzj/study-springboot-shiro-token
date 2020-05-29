@@ -18,8 +18,8 @@ public class CustomAuthFilter extends AccessControlFilter {
     private static String X_TOKEN = "x-token";
 
     /**
-     * 先执行：isAccessAllowed 再执行：onAccessDenied
-     * isAccessAllowed：表示是否允许访问
+     * （1）先执行：isAccessAllowed 再执行：onAccessDenied
+     * （）isAccessAllowed：表示是否允许访问
      * mappedValue：就是[urls]配置中拦截器参数部分，如果允许访问返回true，否则false；
      * 如果返回true的话，就直接返回交给下一个filter进行处理。如果返回false的话，回往下执行onAccessDenied
      */
