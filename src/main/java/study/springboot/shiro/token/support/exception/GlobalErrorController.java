@@ -14,11 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-/**
- * （1）还可以处理非Controller层抛出的异常，例如404 405
- * （2）如果没有配置ErrorController, SpringBoot会通过ErrorMvcAutoConfiguration自动配置一个，
- * 默认的实现类为 BasicErrorController。
- */
 @Slf4j
 @RestController
 public class GlobalErrorController implements ErrorController {
@@ -32,7 +27,6 @@ public class GlobalErrorController implements ErrorController {
 
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity errorData(HttpServletRequest request, HttpServletResponse response) {
-
         log.info("======> GlobalErrorController");
         String requestId = request.getHeader("Request-Id");
         String uri = request.getRequestURI();
