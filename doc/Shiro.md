@@ -80,6 +80,8 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 
   ​		即领域，相当于 datasource 数据源，SecurityManager 进行安全认证需要通过 Realm 获取用户权限数据，比如：如果用户身份数据在数据库，那么 Realm 就需要从数据库获取用户身份信息。不要把 Realm 理解成只是从数据源取数据，在 Realm 中还有认证授权校验的相关代码。
 
+  ​		最基础的是Realm接口，CachingRealm负责缓存处理，AuthenticationRealm负责认证，AuthorizingRealm负责授权，通常自定义的realm继承AuthorizingRealm。
+
 - SessionManager
 
   ​		即会话管理，Shrio 框架定义了一套会话管理，它不依赖 web 容器的 Session ，所以Shrio 可以使用在非 Web 应用上，也可以将分布式应用的会话集中在一点管理，此特性可使它实现单点登录。
