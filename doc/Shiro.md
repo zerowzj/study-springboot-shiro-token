@@ -60,5 +60,69 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 
 ## 2.2 整体架构
 
+- Subject 
+
+  ​		即主体，外部引用于 Subject 进行交互，Subject 记录了当前操作用户，将用户的概念理解为当前操作的主体，可能是一个通过浏览器请求的用户，也可能是一个运行的程序。Subject 在 Shrio 中是一个接口，接口中定义了很多认证授权相关的方法，外部程序通过 Sbject 进行认证授权，而 Sbject 是通过 SecurityManager 安全管理器进行认证授权的。
+
+- SecurityManager
+
+  ​		即安全管理器，对全部的 Sbject　进行安全管理，它是 Shrio 的核心，通过 SecurityManager 可以完成全部 Sbject 的认证、授权等。实质上 SecurityManager 是通过 Authenticator 进行认证，通过 Authorizer 进行授权，通过 SessionManager 进行会话管理等。SecurityManager是一个接口，继承了 Authenticator、Authorizer、SessionManager 这三个接口。
+
+- Authenticator
+
+  ​		即认证器，对用户身份进行认证，Authenticator 是一个接口，Shrio 提供了 ModularRealmAuthenticator实现类，通过ModularRealmAuthenticator 基本上可以满足大多数需求，也可以自定义认证器。
+
+- Authorizer
+
+  ​		即授权器，用户通过认证器认证通过，在访问功能时需要通过授权器判断用户是否有此功能的操作权限。
+
+- Realm
+
+  ​		即领域，相当于 datasource 数据源，SecurityManager 进行安全认证需要通过 Realm 获取用户权限数据，比如：如果用户身份数据在数据库，那么 Realm 就需要从数据库获取用户身份信息。不要把 Realm 理解成只是从数据源取数据，在 Realm 中还有认证授权校验的相关代码。
+
+- SessionManager
+
+  ​		即会话管理，Shrio 框架定义了一套会话管理，它不依赖 web 容器的 Session ，所以Shrio 可以使用在非 Web 应用上，也可以将分布式应用的会话集中在一点管理，此特性可使它实现单点登录。
+
+- SessionDAO
+
+  ​		即会话DAO,是对 Session 会话操作的一套接口，比如要将 Session 存储到数据库，可以通过 jdbc 将会话存储到数据库。
+
+- CacheManager
+
+  ​		即缓存管理，将用户权限数据存储在缓存，这样可以提高性能。
+
+- Cryptografy
+
+  ​		即密码管理，Shrio 提供了一套解密/加密的组件，方便开发。比如提供常用的散列、加/解密功能。
+
+- 
+
+  作者：jarWorker
+  链接：https://www.jianshu.com/p/4affb4f79edf
+  来源：简书
+  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+- 
+
+  作者：jarWorker
+  链接：https://www.jianshu.com/p/4affb4f79edf
+  来源：简书
+  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+- 
+
+  作者：jarWorker
+  链接：https://www.jianshu.com/p/4affb4f79edf
+  来源：简书
+  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+- 
+
+  作者：jarWorker
+  链接：https://www.jianshu.com/p/4affb4f79edf
+  来源：简书
+  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
 
 
