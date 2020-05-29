@@ -6,16 +6,13 @@ public class StatelessAuthToken implements AuthenticationToken {
 
     private String token;
 
-    public StatelessAuthToken() {
-    }
-
     public StatelessAuthToken(String token) {
         this.token = token;
     }
 
     @Override
     public Object getPrincipal() {
-        return token;
+        return this.token;
     }
 
     @Override
