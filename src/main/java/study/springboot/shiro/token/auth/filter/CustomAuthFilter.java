@@ -5,14 +5,14 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.stereotype.Component;
-import study.springboot.shiro.token.auth.token.StatelessAuthToken;
+import study.springboot.shiro.token.auth.token.CustomAuthToken;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @Slf4j
 @Component
-public class CustomAccessControlFilter extends AccessControlFilter {
+public class CustomAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
 
@@ -39,7 +39,7 @@ public class CustomAccessControlFilter extends AccessControlFilter {
         //获取参数中的token值，里取的参数中的token你也可以将token放于head等
         String token = request.getParameter(X_TOKEN);
         //生成无状态Token然后代理登录
-        StatelessAuthToken authToken = new StatelessAuthToken(token);
+        CustomAuthToken authToken = new CustomAuthToken(token);
         try {
             //委托给Realm进行登录
             Subject subject = getSubject(request, response);
