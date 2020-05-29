@@ -1,18 +1,23 @@
 package study.springboot.shiro.token.support.result;
 
+import com.google.common.collect.Maps;
+
 public final class Results {
 
     private Results() {
     }
 
     public static Result success() {
-        Result rst = new Result();
-        return rst;
+        return success(null);
     }
 
     public static <T> Result success(T data) {
         Result rst = new Result();
-        rst.setData(data);
+        if (data != null) {
+            rst.setData(data);
+        } else {
+            rst.setData(Maps.newHashMap());
+        }
         return rst;
     }
 }

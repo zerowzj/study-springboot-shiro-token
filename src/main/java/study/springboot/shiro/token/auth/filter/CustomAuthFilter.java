@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
 
@@ -25,6 +26,7 @@ public class CustomAuthFilter extends AccessControlFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response,
                                       Object mappedValue) throws Exception {
+        log.info("isAccessAllowedisAccessAllowedisAccessAllowed");
         return false;
     }
 
@@ -37,7 +39,7 @@ public class CustomAuthFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         //==============================该步骤主要是通过token代理登录shiro======================
         //获取参数中的token值，里取的参数中的token你也可以将token放于head等
-        String token = request.getParameter(X_TOKEN);
+        String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
         //生成无状态Token然后代理登录
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {

@@ -48,7 +48,7 @@ public class CustomRealm extends AuthorizingRealm {
         //创建一个授权对象
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //权限设置
-//        info.addStringPermission();
+        info.addStringPermission("/res/list");
         //角色设置
 //        info.addRole("admin");
         return info;

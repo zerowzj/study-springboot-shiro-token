@@ -8,12 +8,16 @@ import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import study.springboot.shiro.token.auth.cache.RedisCacheManager;
+import study.springboot.shiro.token.auth.filter.CustomAuthFilter;
 import study.springboot.shiro.token.auth.realm.CustomRealm;
 import study.springboot.shiro.token.auth.subject.CustomSubjectFactory;
 
+import javax.servlet.Filter;
 import java.util.Map;
 
 @Configuration
@@ -25,6 +29,8 @@ public class ShiroCfg {
     private CustomSubjectFactory subjectFactory;
     @Autowired
     private RedisCacheManager redisCacheManager;
+    @Autowired
+    private CustomAuthFilter customAuthFilter;
 
     /**
      * SessionManager通过sessionValidationSchedulerEnabled禁用掉会话调度器
@@ -59,26 +65,35 @@ public class ShiroCfg {
     }
 
     @Bean("shirFilter")
-    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shirFilter(@Autowired SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
+        //过滤器
+        Map<String, Filter> filters = factoryBean.getFilters();
+        filters.put("customAuthc", customAuthFilter);
+
         //（▲）
         factoryBean.setLoginUrl("/unauthorized");        //未认证
         factoryBean.setSuccessUrl("/welcome");           //
         factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
-
         //（▲）设置规则
         Map<String, String> filterChainMap = Maps.newLinkedHashMap();
-        //配置不会被拦截URL，顺序判断
-        filterChainMap.put("/static/**", "anon");
         filterChainMap.put("/login", "anon");
-        //注意,如果roles[admin,guest]是用户需要同时包含两者角色才可以访问,是且的关系;
-        //如果想改为或的关系,请继承AuthorizationFilter并加入过滤连,perm资源也是一样,需要继承PermissionsAuthorizationFilter加入过滤链;
-        filterChainMap.put("/test", "authc,roles[admin]");
-        filterChainMap.put("/**", "authc");
+        filterChainMap.put("/**", "customAuthc");
+        filterChainMap.put("/**/**", "customAuthc");
         factoryBean.setFilterChainDefinitionMap(filterChainMap);
 
         return factoryBean;
     }
+//
+//    @Bean
+//    public FilterRegistrationBean delegatingFilterProxy(){
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+//        proxy.setTargetFilterLifecycle(true);
+//        proxy.setTargetBeanName("shiroFilter");
+//        filterRegistrationBean.setFilter(proxy);
+//        return filterRegistrationBean;
+//    }
 }

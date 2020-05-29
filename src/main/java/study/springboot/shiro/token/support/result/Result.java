@@ -9,14 +9,13 @@ import java.io.Serializable;
 @Getter
 public final class Result<T> implements Serializable {
 
-    private String code;
+    private String code = "0000";
 
-    private String desc;
+    private String desc = "成功";
 
     private T data;
 
     public Result() {
-        this("", "");
     }
 
     public Result(String code, String desc) {
