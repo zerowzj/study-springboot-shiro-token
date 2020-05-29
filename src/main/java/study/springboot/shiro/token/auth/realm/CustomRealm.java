@@ -22,7 +22,7 @@ public class CustomRealm extends AuthorizingRealm {
         //获取当前的用户，已经登录后可以使用在任意的地方获取用户的信息
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        if (username.equals("gaoyang")) {
+        if (username.equals("wzj")) {
             info.addRole("admin");
         } else {
             info.addRole("guest");
