@@ -17,13 +17,8 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  * （★）主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
-@Component
+//@Component
 public class CustomRealm extends AuthorizingRealm {
-
-    @Override
-    public void setAuthorizationCache(Cache<Object, AuthorizationInfo> authorizationCache) {
-        super.setAuthorizationCache(authorizationCache);
-    }
 
     /**
      * 该Realm仅支持自定义的 CustomAuthToken 类型Token
@@ -56,10 +51,6 @@ public class CustomRealm extends AuthorizingRealm {
 
     /**
      * 获取用户认证信息
-     *
-     * @param authenticationToken
-     * @return AuthenticationInfo
-     * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {

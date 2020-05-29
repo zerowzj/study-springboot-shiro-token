@@ -5,13 +5,12 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import study.springboot.shiro.token.auth.cache.RedisCacheManager;
 import study.springboot.shiro.token.auth.filter.CustomAuthFilter;
 import study.springboot.shiro.token.auth.realm.CustomRealm;
@@ -32,6 +31,16 @@ public class ShiroCfg {
     @Autowired
     private CustomAuthFilter customAuthFilter;
 
+    @Bean
+    public CustomAuthFilter customAuthFilter() {
+        return new CustomAuthFilter();
+    }
+
+    @Bean
+    public CustomRealm realm() {
+        return new CustomRealm();
+    }
+
     /**
      * SessionManager通过sessionValidationSchedulerEnabled禁用掉会话调度器
      * 因为我们禁用掉了会话，所以没必要再定期过期会话了
@@ -45,11 +54,11 @@ public class ShiroCfg {
         return sessionManager;
     }
 
-    @Bean("securityManager")
-    public SecurityManager securityManager() {
+    @Bean
+    public SecurityManager defaultWebSecurityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         //
-        manager.setRealm(customRealm);
+        manager.setRealm(realm());
         //Subject工厂
         manager.setSubjectFactory(subjectFactory);
         //禁用Session作为存储策略的实现
@@ -64,15 +73,15 @@ public class ShiroCfg {
         return manager;
     }
 
-    @Bean("shirFilter")
-    public ShiroFilterFactoryBean shirFilter(@Autowired SecurityManager securityManager) {
+    @Bean
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
-        //（▲）安全管理器
-        factoryBean.setSecurityManager(securityManager);
-        //过滤器
-        Map<String, Filter> filters = factoryBean.getFilters();
-        filters.put("customAuthc", customAuthFilter);
 
+        //（▲）安全管理器
+        factoryBean.setSecurityManager(defaultWebSecurityManager());
+        //（▲）过滤器
+        Map<String, Filter> filterMap = factoryBean.getFilters();
+        filterMap.put("authctest", customAuthFilter());
         //（▲）
         factoryBean.setLoginUrl("/unauthorized");        //未认证
         factoryBean.setSuccessUrl("/welcome");           //
@@ -80,20 +89,14 @@ public class ShiroCfg {
         //（▲）设置规则
         Map<String, String> filterChainMap = Maps.newLinkedHashMap();
         filterChainMap.put("/login", "anon");
-        filterChainMap.put("/**", "customAuthc");
-        filterChainMap.put("/**/**", "customAuthc");
+        filterChainMap.put("/**", "authctest");
         factoryBean.setFilterChainDefinitionMap(filterChainMap);
 
         return factoryBean;
     }
-//
-//    @Bean
-//    public FilterRegistrationBean delegatingFilterProxy(){
-//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-//        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
-//        proxy.setTargetFilterLifecycle(true);
-//        proxy.setTargetBeanName("shiroFilter");
-//        filterRegistrationBean.setFilter(proxy);
-//        return filterRegistrationBean;
-//    }
+
+    @Bean("lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
 }

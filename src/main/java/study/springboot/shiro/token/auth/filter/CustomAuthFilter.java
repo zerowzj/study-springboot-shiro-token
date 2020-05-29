@@ -12,7 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @Slf4j
-@Component
+//@Component
 public class CustomAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
