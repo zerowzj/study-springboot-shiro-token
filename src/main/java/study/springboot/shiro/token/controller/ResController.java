@@ -16,4 +16,13 @@ public class ResController {
     public Result list() {
         return Results.success();
     }
+
+    @PostMapping("/add")
+    public Result add() {
+        return Results.success();
+    }
+    @PostMapping("/modify")
+    public Result modify() {
+        return Results.success();
+    }
 }
