@@ -7,7 +7,8 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 重写DefaultWebSubjectFactory主要是关闭创建session
+ * 重写DefaultWebSubjectFactory
+ * 主要是关闭创建Session
  */
 @Slf4j
 @Component
@@ -15,7 +16,7 @@ public class CustomSubjectFactory extends DefaultWebSubjectFactory {
 
     @Override
     public Subject createSubject(SubjectContext context) {
-        //不创建session
+        //不创建Session
         context.setSessionCreationEnabled(false);
         return super.createSubject(context);
     }
