@@ -13,5 +13,10 @@ spring:
   main:
     web-application-type: servlet
     banner-mode: 'off'
+  redis:
+    host: 114.67.102.8
+    port: 7379
+    database: 4
+    timeout: 60000
   profiles:
     active: @env@
