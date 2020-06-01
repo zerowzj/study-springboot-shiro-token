@@ -19,5 +19,4 @@ public class CustomAuthToken implements AuthenticationToken {
     public Object getCredentials() {
         return this;
     }
-
 }

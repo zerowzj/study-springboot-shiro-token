@@ -1,6 +1,7 @@
 package study.springboot.shiro.token.auth.realm;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -39,16 +40,17 @@ public class CustomRealm extends AuthorizingRealm {
         principals.getRealmNames();
 
         //获取当前用户信息，已经登录后可以使用在任意的地方获取用户的信息
-//        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
-//        if (userDetails == null) {
-//            throw new RuntimeException("获取用户授权信息失败");
-//        }
-        //创建一个授权对象
+        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
+        if (userDetails == null) {
+            throw new RuntimeException("获取用户授权信息失败");
+        }
+
+        //创建授权对象
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        //权限设置
-        info.addStringPermission("/res/list");
-        //角色设置
-//        info.addRole("admin");
+        //设置权限
+        info.addStringPermissions(userDetails.getPermissionSet());
+        //设置角色
+        //info.addRole("admin");
         return info;
     }
 
@@ -56,20 +58,20 @@ public class CustomRealm extends AuthorizingRealm {
      * ====================
      * 获取用户认证信息
      * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
+     * new IncorrectCredentialsException();
+     * new LockedAccountException();
      * ====================
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
-        //
+        //认证token
         CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
-        //通过表单接收的用户名
+        //获取token值
         String token = (String) customAuthToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
-        new IncorrectCredentialsException();
-        new LockedAccountException();
         //根据 Token 获取用户信息
         UserDetails userDetails = new UserDetails();
         if (userDetails == null) {
