@@ -95,7 +95,7 @@ public class ShiroCfg {
         //（▲）登录跳转
 //        factoryBean.setSuccessUrl("/welcome");           //认证成功
 //        factoryBean.setLoginUrl("/unauthorized");        //未认证
-//        factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
+        factoryBean.setUnauthorizedUrl("/login"); //未授权
 
         //（▲）设置规则
         //使用LinkedHashMap，因为拦截有先后顺序

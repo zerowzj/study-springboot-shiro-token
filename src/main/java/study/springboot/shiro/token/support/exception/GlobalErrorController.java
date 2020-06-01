@@ -2,6 +2,7 @@ package study.springboot.shiro.token.support.exception;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +39,13 @@ public class GlobalErrorController implements ErrorController {
         log.info("message={}", message);
         Map<String, Object> data = Maps.newHashMap();
         if (statusCode == 500) {
-            data.put("code", "9999");
-            data.put("desc", exception.getMessage());
+            if(exception.getCause() instanceof UnauthorizedException){
+                data.put("code", "4001");
+                data.put("desc", "无权限");
+            } else {
+                data.put("code", "9999");
+                data.put("desc", exception.getMessage());
+            }
         } else if (statusCode == 404) {
             data.put("code", "9999");
             data.put("desc", "非法URL");
