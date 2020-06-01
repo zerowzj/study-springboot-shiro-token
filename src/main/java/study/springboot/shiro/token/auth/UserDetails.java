@@ -9,5 +9,7 @@ import java.util.Set;
 @Getter
 public class UserDetails {
 
+    private String ubId;
+
     private Set<String> permissionSet;
 }

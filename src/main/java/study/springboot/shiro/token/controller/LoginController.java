@@ -16,12 +16,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result login(@RequestBody Map<String, Object> param) {
-        String token = "12312";
-
-//        CustomAuthToken authToken = new CustomAuthToken(token);
-//        SecurityUtils.getSubject()
-//                .login(authToken);
-        //
+        String token = "666666666";
         Map<String, Object> data = Maps.newHashMap();
         data.put("token", token);
         return Results.success(data);

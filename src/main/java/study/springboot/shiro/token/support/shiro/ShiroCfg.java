@@ -6,14 +6,14 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import study.springboot.shiro.token.auth.cache.RedisCacheManager;
-import study.springboot.shiro.token.auth.filter.CustomAuthFilter;
-import study.springboot.shiro.token.auth.realm.CustomRealm;
+import study.springboot.shiro.token.auth.filter.TokenAuthFilter;
+import study.springboot.shiro.token.auth.realm.TokenRealm;
 import study.springboot.shiro.token.auth.subject.CustomSubjectFactory;
 
 import javax.servlet.Filter;
@@ -23,23 +23,23 @@ import java.util.Map;
 public class ShiroCfg {
 
     @Autowired
-    private CustomRealm customRealm;
+    private TokenRealm customRealm;
     @Autowired
     private CustomSubjectFactory customSubjectFactory;
     @Autowired
-    private CustomAuthFilter customAuthFilter;
+    private TokenAuthFilter customAuthFilter;
 
     @Bean
-    public CustomRealm customRealm() {
-        return new CustomRealm();
+    public TokenRealm customRealm() {
+        return new TokenRealm();
     }
     @Bean
     public CustomSubjectFactory customSubjectFactory() {
         return new CustomSubjectFactory();
     }
     @Bean
-    public CustomAuthFilter customAuthFilter() {
-        return new CustomAuthFilter();
+    public TokenAuthFilter customAuthFilter() {
+        return new TokenAuthFilter();
     }
 
     /**
@@ -119,7 +119,7 @@ public class ShiroCfg {
      * ====================
      */
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilter(@Autowired SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
@@ -127,6 +127,7 @@ public class ShiroCfg {
         //（▲）过滤器
         Map<String, Filter> filterMap = factoryBean.getFilters();
         filterMap.put("authc", customAuthFilter());
+        factoryBean.setFilters(filterMap);
 
         //（▲）登录跳转
         factoryBean.setSuccessUrl("/welcome");           //认证成功
@@ -149,10 +150,10 @@ public class ShiroCfg {
     /**
      * 保证实现了Shiro内部lifecycle函数的bean执行
      */
-//    @Bean
-//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-//        return new LifecycleBeanPostProcessor();
-//    }
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
 ////
 //    @Bean
 //    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {

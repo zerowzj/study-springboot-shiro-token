@@ -17,6 +17,6 @@ public class CustomAuthToken implements AuthenticationToken {
 
     @Override
     public Object getCredentials() {
-        return this;
+        return this.token;
     }
 }

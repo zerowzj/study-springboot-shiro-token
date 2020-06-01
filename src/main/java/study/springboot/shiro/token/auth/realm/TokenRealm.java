@@ -16,7 +16,7 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  */
 @Slf4j
 //@Component
-public class CustomRealm extends AuthorizingRealm {
+public class TokenRealm extends AuthorizingRealm {
 
     /**
      * 该Realm仅支持自定义的CustomAuthToken类型Token
@@ -36,10 +36,8 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.info(">>>>>>>>>> 获取用户授权信息");
-        principals.getPrimaryPrincipal();
-        principals.getRealmNames();
-
         //获取当前用户信息，已经登录后可以使用在任意的地方获取用户的信息
+        UserDetails user = (UserDetails) principals.getPrimaryPrincipal();
         UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
         if (userDetails == null) {
             throw new RuntimeException("获取用户授权信息失败");
@@ -65,17 +63,16 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
-        //认证token
-        CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
         //获取token值
+        CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
         String token = (String) customAuthToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
-        //根据 Token 获取用户信息
+        //根据token获取用户信息
         UserDetails userDetails = new UserDetails();
         if (userDetails == null) {
-            throw new UnknownAccountException("token过期或错误");
+            throw new IncorrectCredentialsException("token过期或错误");
         }
         //创建Shiro用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
