@@ -1,6 +1,9 @@
 package study.springboot.shiro.token.support.shiro;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import study.springboot.shiro.token.auth.filter.TokenAuthFilter;
 
 @Component
 public class ShiroFilterCfg {
@@ -10,12 +13,12 @@ public class ShiroFilterCfg {
 //        return new CustomAuthFilter();
 //    }
 //
-//    @Bean
-//    public FilterRegistrationBean customAuthFilter(CustomAuthFilter filter) {
-//        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
-//        registration.setEnabled(false);
-//        return registration;
-//    }
+    @Bean
+    public FilterRegistrationBean customAuthFilter(TokenAuthFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
 
 //    @Bean
 //    public FilterRegistrationBean delegatingFilterProxy() {

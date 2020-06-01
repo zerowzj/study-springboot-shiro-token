@@ -1,5 +1,6 @@
 package study.springboot.shiro.token.auth.realm;
 
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -71,6 +72,7 @@ public class TokenRealm extends AuthorizingRealm {
         }
         //根据token获取用户信息
         UserDetails userDetails = new UserDetails();
+        userDetails.setPermissionSet(Sets.newHashSet("/res/list", "/res/add"));
         if (userDetails == null) {
             throw new IncorrectCredentialsException("token过期或错误");
         }
