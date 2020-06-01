@@ -30,7 +30,7 @@ public class ShiroCfg {
     private TokenAuthFilter customAuthFilter;
 
     @Bean
-    public TokenRealm tokenRealm() {
+    public TokenRealm customRealm() {
         return new TokenRealm();
     }
     @Bean
@@ -38,8 +38,18 @@ public class ShiroCfg {
         return new CustomSubjectFactory();
     }
     @Bean
-    public TokenAuthFilter tokenAuthFilter() {
+    public TokenAuthFilter customAuthFilter() {
         return new TokenAuthFilter();
+    }
+
+    /**
+     * ====================
+     * 缓存管理器
+     * ====================
+     */
+    @Bean
+    public CacheManager cacheManager() {
+        return null;
     }
 
     /**
@@ -57,6 +67,20 @@ public class ShiroCfg {
         return sessionManager;
     }
 
+//    @Bean
+//    public Authorizer authorizer() {
+//        ModularRealmAuthorizer authenticator = new ModularRealmAuthorizer();
+//        authenticator.setRealms(Arrays.asList(customRealm()));
+//        return authenticator;
+//    }
+//
+//    @Bean
+//    public org.apache.shiro.authc.Authenticator authenticator() {
+//        ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+//        authenticator.setRealms(Arrays.asList(customRealm()));
+//        return authenticator;
+//    }
+
     /**
      * ====================
      * 安全管理器
@@ -66,7 +90,7 @@ public class ShiroCfg {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）Realm
-        securityManager.setRealm(tokenRealm());
+        securityManager.setRealm(customRealm());
         //（▲）Subject工厂
         securityManager.setSubjectFactory(customSubjectFactory());
         //（▲）禁用Session作为存储策略的实现
@@ -101,14 +125,14 @@ public class ShiroCfg {
         factoryBean.setSecurityManager(securityManager);
 
         //（▲）过滤器
-        Map<String, Filter> filterMap = Maps.newLinkedHashMap();
-        filterMap.put("token_authc", tokenAuthFilter());
+        Map<String, Filter> filterMap = factoryBean.getFilters();
+        filterMap.put("authc", customAuthFilter());
         factoryBean.setFilters(filterMap);
 
         //（▲）登录跳转
-//        factoryBean.setSuccessUrl("/welcome");           //认证成功
-//        factoryBean.setLoginUrl("/unauthorized");        //未认证
-//        factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
+        factoryBean.setSuccessUrl("/welcome");           //认证成功
+        factoryBean.setLoginUrl("/unauthorized");        //未认证
+        factoryBean.setUnauthorizedUrl("/unauthorized"); //未授权
 
         //（▲）设置规则
         //使用LinkedHashMap，因为拦截有先后顺序
@@ -117,7 +141,7 @@ public class ShiroCfg {
         filterChainDefinition.put("/login", "anon");
         //其他资源地址全部需要通过代理登录步骤，注意顺序，必须先进过无状态代理登录后，后面的权限和角色认证才能使用
         //必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
-        filterChainDefinition.put("/**", "token_authc");
+        filterChainDefinition.put("/**", "authc");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinition);
 
         return factoryBean;
@@ -130,4 +154,11 @@ public class ShiroCfg {
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
+////
+//    @Bean
+//    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+//        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
+//        proxyCreator.setProxyTargetClass(true);
+//        return proxyCreator;
+//    }
 }
