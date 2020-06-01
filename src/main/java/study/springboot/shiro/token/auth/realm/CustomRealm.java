@@ -6,7 +6,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.springboot.shiro.token.auth.UserDetails;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
@@ -15,7 +14,7 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  * （★）主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
-@Component
+//@Component
 public class CustomRealm extends AuthorizingRealm {
 
     /**
@@ -56,6 +55,7 @@ public class CustomRealm extends AuthorizingRealm {
     /**
      * ====================
      * 获取用户认证信息
+     * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
      * ====================
      */
     @Override
@@ -81,7 +81,7 @@ public class CustomRealm extends AuthorizingRealm {
         // 第一个参数随便放，可以是user，在系统中任意位置可以获取改对象;
         // 第二个参数必须是密码
         // 第三个参数当前Realm的名称，因为可能存在多个Realm
-        SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(token, customAuthToken, getName());
+        SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(userDetails, token, getName());
         return authInfo;
     }
 }

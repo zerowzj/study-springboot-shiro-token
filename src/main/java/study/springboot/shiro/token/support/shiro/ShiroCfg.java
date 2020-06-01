@@ -29,19 +29,18 @@ public class ShiroCfg {
     @Autowired
     private CustomAuthFilter customAuthFilter;
 
-    @Autowired
-    private RedisCacheManager redisCacheManager;
-
-
-//    @Bean
-//    public CustomRealm customRealm() {
-//        return new CustomRealm();
-//    }
-//
-//    @Bean
-//    public CustomSubjectFactory customSubjectFactory() {
-//        return new CustomSubjectFactory();
-//    }
+    @Bean
+    public CustomRealm customRealm() {
+        return new CustomRealm();
+    }
+    @Bean
+    public CustomSubjectFactory customSubjectFactory() {
+        return new CustomSubjectFactory();
+    }
+    @Bean
+    public CustomAuthFilter customAuthFilter() {
+        return new CustomAuthFilter();
+    }
 
     /**
      * ====================
@@ -91,9 +90,9 @@ public class ShiroCfg {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）Realm
-        securityManager.setRealm(customRealm);
+        securityManager.setRealm(customRealm());
         //（▲）Subject工厂
-        securityManager.setSubjectFactory(customSubjectFactory);
+        securityManager.setSubjectFactory(customSubjectFactory());
         //（▲）禁用Session作为存储策略的实现
         DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
@@ -127,7 +126,7 @@ public class ShiroCfg {
 
         //（▲）过滤器
         Map<String, Filter> filterMap = factoryBean.getFilters();
-        filterMap.put("authc", customAuthFilter);
+        filterMap.put("authc", customAuthFilter());
 
         //（▲）登录跳转
         factoryBean.setSuccessUrl("/welcome");           //认证成功
