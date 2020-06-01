@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,27 +27,28 @@ public class GlobalErrorController implements ErrorController {
 
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity error(HttpServletRequest request, HttpServletResponse response) {
-        String requestId = request.getHeader("Request-Id");
-        String uri = request.getRequestURI();
-        log.info(" i am ErrorController!===>{},{}", requestId, uri);
         //
         int statusCode = ErrorUtils.getStatusCode(request);
         Exception exception = ErrorUtils.getException(request);
         String message = ErrorUtils.getMessage(request);
 
-        log.info("message={}", message);
         Map<String, Object> data = Maps.newHashMap();
-        if (statusCode == 500) {
-            if(exception.getCause() instanceof UnauthorizedException){
+        if (exception != null) {
+            Throwable cause = exception.getCause();
+            if (cause instanceof UnauthorizedException) {
                 data.put("code", "4001");
                 data.put("desc", "无权限");
             } else {
                 data.put("code", "9999");
                 data.put("desc", exception.getMessage());
             }
-        } else if (statusCode == 404) {
-            data.put("code", "9999");
-            data.put("desc", "非法URL");
+        } else {
+            if (statusCode == 500) {
+
+            } else if (statusCode == 404) {
+                data.put("code", "9999");
+                data.put("desc", "非法URL");
+            }
         }
         ResponseEntity entity = new ResponseEntity(data, HttpStatus.OK);
         return entity;
