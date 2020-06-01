@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
 
 import javax.servlet.ServletRequest;
@@ -13,7 +14,7 @@ import javax.servlet.ServletResponse;
  * 先执行 isAccessAllowed 再执行 onAccessDenied
  */
 @Slf4j
-//@Component
+@Component
 public class TokenAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";

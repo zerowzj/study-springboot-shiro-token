@@ -23,24 +23,11 @@ import java.util.Map;
 public class ShiroCfg {
 
     @Autowired
-    private TokenRealm customRealm;
+    private TokenRealm tokenRealm;
     @Autowired
     private CustomSubjectFactory customSubjectFactory;
     @Autowired
-    private TokenAuthFilter customAuthFilter;
-
-    @Bean
-    public TokenRealm tokenRealm() {
-        return new TokenRealm();
-    }
-    @Bean
-    public CustomSubjectFactory customSubjectFactory() {
-        return new CustomSubjectFactory();
-    }
-    @Bean
-    public TokenAuthFilter tokenAuthFilter() {
-        return new TokenAuthFilter();
-    }
+    private TokenAuthFilter tokenAuthFilter;
 
     /**
      * ====================
@@ -66,9 +53,9 @@ public class ShiroCfg {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）Realm
-        securityManager.setRealm(tokenRealm());
+        securityManager.setRealm(tokenRealm);
         //（▲）Subject工厂
-        securityManager.setSubjectFactory(customSubjectFactory());
+        securityManager.setSubjectFactory(customSubjectFactory);
         //（▲）禁用Session作为存储策略的实现
         DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
@@ -102,7 +89,7 @@ public class ShiroCfg {
 
         //（▲）过滤器
         Map<String, Filter> filterMap = Maps.newLinkedHashMap();
-        filterMap.put("token_authc", tokenAuthFilter());
+        filterMap.put("token_authc", tokenAuthFilter);
         factoryBean.setFilters(filterMap);
 
         //（▲）登录跳转
@@ -125,9 +112,10 @@ public class ShiroCfg {
 
     /**
      * 保证实现了Shiro内部lifecycle函数的bean执行
+     * （1）使用该bean时，必须使用@Bean而不能使用@Component
      */
-    @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
+//    @Bean
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
 }

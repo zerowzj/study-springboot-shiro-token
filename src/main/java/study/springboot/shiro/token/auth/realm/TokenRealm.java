@@ -8,6 +8,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.springboot.shiro.token.auth.UserDetails;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
@@ -16,7 +17,7 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  * （★）主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
-//@Component
+@Component
 public class TokenRealm extends AuthorizingRealm {
 
     /**

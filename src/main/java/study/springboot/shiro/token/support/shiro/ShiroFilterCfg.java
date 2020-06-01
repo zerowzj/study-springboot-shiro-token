@@ -8,11 +8,6 @@ import study.springboot.shiro.token.auth.filter.TokenAuthFilter;
 @Component
 public class ShiroFilterCfg {
 
-//    @Bean
-//    public CustomAuthFilter customAuthFilter() {
-//        return new CustomAuthFilter();
-//    }
-//
     @Bean
     public FilterRegistrationBean customAuthFilter(TokenAuthFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean(filter);
