@@ -6,6 +6,7 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -50,7 +51,7 @@ public class ShiroCfg {
      * ====================
      */
     @Bean("securityManager")
-    public SecurityManager securityManager() {
+    public SecurityManager securityManager(SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）Realm
         securityManager.setRealm(tokenRealm);
@@ -61,8 +62,7 @@ public class ShiroCfg {
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
         storageEvaluator.setSessionStorageEnabled(false);
         //（▲）Session管理器
-        //ShiroSessionManager sessionManager = null;
-        //manager.setSessionManager(sessionManager);
+        securityManager.setSessionManager(sessionManager);
         //（▲）Cache管理器
         //manager.setCacheManager();
 //        //（▲）认证 set realms
