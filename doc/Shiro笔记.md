@@ -98,4 +98,17 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 
   ​		即密码管理，Shrio 提供了一套解密/加密的组件，方便开发。比如提供常用的散列、加/解密功能。
 
+# 三. 过滤器
 
+默认过滤器
+
+- anon -- org.apache.shiro.web.filter.authc.AnonymousFilter
+- authc -- org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+- authcBasic -- org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
+- perms -- org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter
+- port -- org.apache.shiro.web.filter.authz.PortFilter
+- rest -- org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter
+- roles -- org.apache.shiro.web.filter.authz.RolesAuthorizationFilter
+- ssl -- org.apache.shiro.web.filter.authz.SslFilter
+- user -- org.apache.shiro.web.filter.authc.UserFilter
+- logout -- org.apache.shiro.web.filter.authc.LogoutFilter
