@@ -6,6 +6,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.springboot.shiro.token.auth.UserDetails;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
@@ -14,6 +15,7 @@ import study.springboot.shiro.token.auth.token.CustomAuthToken;
  * （★）主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
+@Component
 public class CustomRealm extends AuthorizingRealm {
 
     /**
@@ -27,7 +29,9 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     /**
+     * ====================
      * 获取用户授权信息
+     * ====================
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -50,7 +54,9 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     /**
+     * ====================
      * 获取用户认证信息
+     * ====================
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
@@ -78,6 +84,4 @@ public class CustomRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(token, customAuthToken, getName());
         return authInfo;
     }
-
-
 }

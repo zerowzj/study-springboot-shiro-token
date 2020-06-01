@@ -1,11 +1,11 @@
 package study.springboot.shiro.token.support.shiro;
 
+import com.google.common.collect.Maps;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,31 @@ import study.springboot.shiro.token.auth.realm.CustomRealm;
 import study.springboot.shiro.token.auth.subject.CustomSubjectFactory;
 
 import javax.servlet.Filter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
 public class ShiroCfg {
 
     @Autowired
+    private CustomRealm customRealm;
+    @Autowired
+    private CustomSubjectFactory customSubjectFactory;
+    @Autowired
+    private CustomAuthFilter customAuthFilter;
+
+    @Autowired
     private RedisCacheManager redisCacheManager;
 
-    @Bean
-    public CustomRealm customRealm() {
-        return new CustomRealm();
-    }
 
-
-    @Bean
-    public CustomSubjectFactory customSubjectFactory() {
-        return new CustomSubjectFactory();
-    }
+//    @Bean
+//    public CustomRealm customRealm() {
+//        return new CustomRealm();
+//    }
+//
+//    @Bean
+//    public CustomSubjectFactory customSubjectFactory() {
+//        return new CustomSubjectFactory();
+//    }
 
     /**
      * ====================
@@ -55,10 +61,10 @@ public class ShiroCfg {
     @Bean
     public DefaultSessionManager sessionManager() {
         DefaultSessionManager sessionManager = new DefaultSessionManager();
-        //禁用掉会话调度器，因为我们禁用掉了会话，所以没必要再定期过期会话了
+        //禁用掉会话调度器，因为禁用掉了会话，所以没必要再定期过期会话了
         sessionManager.setSessionValidationSchedulerEnabled(false);
-        //缓存
-        sessionManager.setCacheManager(redisCacheManager);
+        //缓存管理器
+        //sessionManager.setCacheManager(redisCacheManager);
         return sessionManager;
     }
 
@@ -81,11 +87,13 @@ public class ShiroCfg {
      * 安全管理器
      * ====================
      */
-    @Bean
+    @Bean("securityManager")
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        //（▲）Realm
+        securityManager.setRealm(customRealm);
         //（▲）Subject工厂
-        securityManager.setSubjectFactory(customSubjectFactory());
+        securityManager.setSubjectFactory(customSubjectFactory);
         //（▲）禁用Session作为存储策略的实现
         DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
@@ -99,8 +107,7 @@ public class ShiroCfg {
 //        securityManager.setAuthenticator(authenticator);
 //        //（▲）授权 set realms
 //        securityManager.setAuthorizer(authorizer);
-        //（▲）Realm
-        securityManager.setRealm(customRealm());
+
         return securityManager;
     }
 
@@ -113,7 +120,7 @@ public class ShiroCfg {
      * ====================
      */
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager, CustomAuthFilter customAuthFilter) {
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
@@ -129,7 +136,7 @@ public class ShiroCfg {
 
         //（▲）设置规则
         //使用LinkedHashMap，因为拦截有先后顺序
-        Map<String, String> filterChainDefinition = new LinkedHashMap();
+        Map<String, String> filterChainDefinition = Maps.newLinkedHashMap();
         //登录接口不需要认证
         filterChainDefinition.put("/login", "anon");
         //其他资源地址全部需要通过代理登录步骤，注意顺序，必须先进过无状态代理登录后，后面的权限和角色认证才能使用
@@ -143,11 +150,11 @@ public class ShiroCfg {
     /**
      * 保证实现了Shiro内部lifecycle函数的bean执行
      */
-    @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
-//
+//    @Bean
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+////
 //    @Bean
 //    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
 //        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();

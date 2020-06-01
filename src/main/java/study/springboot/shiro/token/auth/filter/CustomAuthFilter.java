@@ -11,7 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 @Slf4j
-//@Component
+@Component
 public class CustomAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
@@ -36,18 +36,19 @@ public class CustomAuthFilter extends AccessControlFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         log.info(">>>>>>>>>> onAccessDenied");
-        //==============================该步骤主要是通过token代理登录shiro======================
-        //获取token
+        //******************** 该步骤主要是通过token代理登录shiro ********************
+        //获取token值
         String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
-        //生成无状态Token然后代理登录
+        //生成无状态AuthenticationToken，然后代理登录
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {
-            //（★）委托给 Realm 进行登录验证
+            //（★）委托给Realm进行登录和授权验证
+            //登录
             Subject subject = getSubject(request, response);
             subject.login(authToken);
-            //（★）委托给Realm进行授权验证
+            //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
-//            subject.checkPermissions(uri);
+            subject.checkPermissions(uri);
         } catch (Exception ex) {
             //log.error(ex.getLocalizedMessage(), ex);
             //登录失败不用处理后面的过滤器会处理并且能通过@ControllerAdvice统一处理相关异常

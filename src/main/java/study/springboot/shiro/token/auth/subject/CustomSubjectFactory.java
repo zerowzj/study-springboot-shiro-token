@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * 重写DefaultWebSubjectFactory，主要是关闭创建Session
  */
 @Slf4j
-//@Component
+@Component
 public class CustomSubjectFactory extends DefaultWebSubjectFactory {
 
     @Override

@@ -48,7 +48,7 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 
 - Subject
 
-  ​		主体，当前参与应用安全部分的主体。可以是用户，可以是第三方服务，可以是cron 任务，或者任何东西。主要指一个正在与当前软件交互的东西。所有Subject都需要SecurityManager，当与Subject进行交互，这些交互行为实际上被转换为与SecurityManager的交互
+  ​		主体，当前参与应用安全部分的主体。可以是用户，可以是第三方服务，可以是cron 任务，或者任何东西。主要指一个正在与当前软件交互的东西。所有Subject都需要SecurityManager，当与Subject进行交互，这些交互行为实际上被转换为与SecurityManager的交互。
 
 - SecurityManager
 
@@ -56,7 +56,7 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 
 - Realms
 
-  ​		Realms作为Shiro和应用的连接桥，当需要与安全数据交互的时候，像用户账户，或者访问控制，Shiro就从一个或多个Realms中查找。Shiro提供了一些可以直接使用的Realms，如果默认的Realms不能满足你的需求，你也可以定制自己的Realms
+  ​		Realms作为Shiro和应用的连接桥，当需要与安全数据交互的时候，像用户账户，或者访问控制，Shiro就从一个或多个Realms中查找。Shiro提供了一些可以直接使用的Realms，如果默认的Realms不能满足你的需求，你也可以定制自己的Realms。
 
 ## 2.2 整体架构
 
@@ -97,34 +97,5 @@ Shiro开发团队称为“应用程序安全的四个基石”，即：认证，
 - Cryptografy
 
   ​		即密码管理，Shrio 提供了一套解密/加密的组件，方便开发。比如提供常用的散列、加/解密功能。
-
-- 
-
-  作者：jarWorker
-  链接：https://www.jianshu.com/p/4affb4f79edf
-  来源：简书
-  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-- 
-
-  作者：jarWorker
-  链接：https://www.jianshu.com/p/4affb4f79edf
-  来源：简书
-  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-- 
-
-  作者：jarWorker
-  链接：https://www.jianshu.com/p/4affb4f79edf
-  来源：简书
-  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-- 
-
-  作者：jarWorker
-  链接：https://www.jianshu.com/p/4affb4f79edf
-  来源：简书
-  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
 
 
