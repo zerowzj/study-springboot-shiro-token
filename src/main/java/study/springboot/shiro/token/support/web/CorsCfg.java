@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.support;
+package study.springboot.shiro.token.support.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
