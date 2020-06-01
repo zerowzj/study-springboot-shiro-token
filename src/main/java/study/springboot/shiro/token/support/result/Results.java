@@ -12,12 +12,10 @@ public final class Results {
     }
 
     public static <T> Result success(T data) {
-        Result rst = new Result();
-        if (data != null) {
-            rst.setData(data);
-        } else {
-            rst.setData(Maps.newHashMap());
+        if (data == null) {
+            data = (T) Maps.newHashMap();
         }
+        Result rst = new Result(data);
         return rst;
     }
 }
