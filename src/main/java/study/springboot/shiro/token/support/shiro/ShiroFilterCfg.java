@@ -9,7 +9,12 @@ import study.springboot.shiro.token.auth.filter.CustomAuthFilter;
 public class ShiroFilterCfg {
 
     @Bean
-    public FilterRegistrationBean shiroLoginFilteRegistration(CustomAuthFilter filter) {
+    public CustomAuthFilter customAuthFilter() {
+        return new CustomAuthFilter();
+    }
+
+    @Bean
+    public FilterRegistrationBean customAuthFilter(CustomAuthFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean(filter);
         registration.setEnabled(false);
         return registration;

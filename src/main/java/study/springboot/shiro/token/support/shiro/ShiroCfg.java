@@ -23,24 +23,14 @@ import java.util.Map;
 @Configuration
 public class ShiroCfg {
 
-    //    @Autowired
-//    private CustomRealm customRealm;
-//    @Autowired
-//    private CustomSubjectFactory customSubjectFactory;
     @Autowired
     private RedisCacheManager redisCacheManager;
-//    @Autowired
-//    private CustomAuthFilter customAuthFilter;
 
     @Bean
     public CustomRealm customRealm() {
         return new CustomRealm();
     }
 
-    @Bean
-    public CustomAuthFilter customAuthFilter() {
-        return new CustomAuthFilter();
-    }
 
     @Bean
     public CustomSubjectFactory customSubjectFactory() {
@@ -86,16 +76,6 @@ public class ShiroCfg {
 //        return authenticator;
 //    }
 
-//    @Bean
-//    public DefaultWebSecurityManager securityManager(org.apache.shiro.authc.Authenticator authenticator, Authorizer authorizer) {
-//        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-//        securityManager.setAuthenticator(authenticator);// 认证 set realms
-//        securityManager.setAuthorizer(authorizer);// 授权 set realms
-//        //securityManager.setCacheManager(cacheManager());
-//        return securityManager;
-//    }
-
-
     /**
      * ====================
      * 安全管理器
@@ -104,8 +84,6 @@ public class ShiroCfg {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        //（▲）Realm
-        securityManager.setRealm(customRealm());
         //（▲）Subject工厂
         securityManager.setSubjectFactory(customSubjectFactory());
         //（▲）禁用Session作为存储策略的实现
@@ -121,12 +99,17 @@ public class ShiroCfg {
 //        securityManager.setAuthenticator(authenticator);
 //        //（▲）授权 set realms
 //        securityManager.setAuthorizer(authorizer);
+        //（▲）Realm
+        securityManager.setRealm(customRealm());
         return securityManager;
     }
 
     /**
      * ====================
      * Shiro Filter
+     * Filter Chain定义说明
+     * （1）一个URL可以配置多个Filter，使用逗号分隔
+     * （2）当设置多个过滤器时，全部验证通过，才视为通过
      * ====================
      */
     @Bean("shiroFilter")
@@ -150,12 +133,16 @@ public class ShiroCfg {
         //登录接口不需要认证
         filterChainDefinition.put("/login", "anon");
         //其他资源地址全部需要通过代理登录步骤，注意顺序，必须先进过无状态代理登录后，后面的权限和角色认证才能使用
+        //必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
         filterChainDefinition.put("/**", "authc");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinition);
 
         return factoryBean;
     }
 
+    /**
+     * 保证实现了Shiro内部lifecycle函数的bean执行
+     */
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
