@@ -7,6 +7,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
+import study.springboot.shiro.token.support.session.UserInfo;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 
 import javax.servlet.ServletRequest;
@@ -70,7 +71,10 @@ public class TokenAuthFilter extends AccessControlFilter {
     public void afterCompletion(ServletRequest request, ServletResponse response,
                                 Exception exception) throws Exception {
         log.info(">>>>>> afterCompletion");
-        //（★）
-        UserInfoContext.remove();
+        UserInfo userInfo  = UserInfoContext.get();
+        if(userInfo != null){
+            log.info("remove user info context");
+            UserInfoContext.remove();
+        }
     }
 }
