@@ -4,30 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
 @Component
 public class RedisClient {
-
-    private static RedisTemplate<String, String> REST_TEMPLATE;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @PostConstruct
-    public void init() {
-        REST_TEMPLATE = redisTemplate;
+    public String get(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 
-    public static String get(String key) {
-        return REST_TEMPLATE.opsForValue().get(key);
+    public void set(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
     }
 
-    public static void set(String key, String value) {
-        REST_TEMPLATE.opsForValue().set(key, value);
-    }
-
-    public static void set(String key, Object value) {
-        REST_TEMPLATE.opsForValue().set(key, "");
+    public void set(String key, Object value) {
+        redisTemplate.opsForValue().set(key, "");
     }
 }

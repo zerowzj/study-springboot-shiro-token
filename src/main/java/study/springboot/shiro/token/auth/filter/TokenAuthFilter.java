@@ -43,12 +43,12 @@ public class TokenAuthFilter extends AccessControlFilter {
         //******************** 该步骤主要是通过token代理登录shiro ********************
         //获取token值
         String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
-        //生成无状态AuthenticationToken，然后代理登录
+        //生成AuthenticationToken，然后代理登录
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {
             //（★）委托给Realm进行登录和授权验证
-            //登录
             Subject subject = getSubject(request, response);
+            //登录
             subject.login(authToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
