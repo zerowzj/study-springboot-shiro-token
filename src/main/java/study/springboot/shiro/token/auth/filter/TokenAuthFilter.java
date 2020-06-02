@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
+import study.springboot.shiro.token.support.redis.RedisClient;
 import study.springboot.shiro.token.support.session.UserInfo;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 
@@ -20,6 +22,9 @@ import javax.servlet.ServletResponse;
 public class TokenAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
+
+    @Autowired
+    private RedisClient redisClient;
 
     /**
      * isAccessAllowed：表示是否允许访问
@@ -55,21 +60,12 @@ public class TokenAuthFilter extends AccessControlFilter {
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
             subject.checkPermissions(uri);
-
         } catch (Exception ex) {
             //log.error(ex.getLocalizedMessage(), ex);
             //登录失败不用处理后面的过滤器会处理并且能通过@ControllerAdvice统一处理相关异常
             throw ex;
         }
         return true;
-    }
-
-    @Override
-    protected void postHandle(ServletRequest request, ServletResponse response) throws Exception {
-        log.info(">>>>>> postHandle");
-        //（★）
-        UserInfo userInfo = new UserInfo();
-        UserInfoContext.set(userInfo);
     }
 
     @Override
