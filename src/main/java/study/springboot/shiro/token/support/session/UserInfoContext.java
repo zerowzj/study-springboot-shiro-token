@@ -12,7 +12,7 @@ package study.springboot.shiro.token.support.session;
  */
 public class UserInfoContext {
 
-    private static InheritableThreadLocal<UserInfo> LOCAL = new InheritableThreadLocal<>();
+    private static ThreadLocal<UserInfo> LOCAL = new ThreadLocal<>();
 
     /**
      * 获取用户信息

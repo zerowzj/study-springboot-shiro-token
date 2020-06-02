@@ -13,7 +13,6 @@ public class PopedomServiceImpl implements PopedomService {
         List<String> data = Lists.newArrayList();
         data.add("/res/add");
         data.add("/res/modify");
-        data.add("/res/list");
         return data;
     }
 
