@@ -2,7 +2,6 @@ package study.springboot.shiro.token.auth.realm;
 
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -21,7 +20,7 @@ import study.springboot.shiro.token.support.session.UserInfoContext;
 import study.springboot.shiro.token.support.utils.JsonUtils;
 
 /**
- * （★）主要用于Shiro的登录认证以及权限认证
+ * 主要用于Shiro的登录认证以及权限认证
  */
 @Slf4j
 @Component
@@ -42,11 +41,11 @@ public class TokenRealm extends AuthorizingRealm {
 
     /**
      * ====================
-     * 获取用户认证信息
+     * （★）获取用户认证信息
+     * ====================
      * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
      * new IncorrectCredentialsException();
      * new LockedAccountException();
-     * ====================
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
@@ -69,7 +68,7 @@ public class TokenRealm extends AuthorizingRealm {
 
         //
         UserDetails userDetails = new UserDetails();
-        userDetails.setPermissionSet(Sets.newHashSet("/res/list", "/res/add"));
+        userDetails.setPermissionSet(Sets.newHashSet("/res/add"));
         //创建Shiro用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
@@ -82,15 +81,15 @@ public class TokenRealm extends AuthorizingRealm {
 
     /**
      * ====================
-     * 获取用户授权信息
+     * （★）获取用户授权信息
      * ====================
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.info(">>>>>>>>>> 获取用户授权信息");
         //获取当前用户信息，已经登录后可以使用在任意的地方获取用户的信息
-        UserDetails user = (UserDetails) principals.getPrimaryPrincipal();
-        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
+        UserDetails userDetails = (UserDetails) principals.getPrimaryPrincipal();
+//        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
         if (userDetails == null) {
             throw new RuntimeException("获取用户授权信息失败");
         }

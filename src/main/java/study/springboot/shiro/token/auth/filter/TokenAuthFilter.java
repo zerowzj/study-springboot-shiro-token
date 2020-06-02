@@ -4,15 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
-import org.assertj.core.util.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 先执行 isAccessAllowed，再执行 onAccessDenied
@@ -23,14 +22,8 @@ public class TokenAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
 
-    private List<String> securitySource;
-
-    @PostConstruct
-    public void init() {
-        securitySource = Lists.newArrayList();
-        securitySource.add("/res/add");
-        securitySource.add("/res/modify");
-    }
+    @Autowired
+    private ArrayList<String> securitySource111;
 
     /**
      * isAccessAllowed：表示是否允许访问
@@ -65,7 +58,7 @@ public class TokenAuthFilter extends AccessControlFilter {
             subject.login(authToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
-            if (securitySource.contains(uri)) {
+            if (securitySource111.contains(uri)) {
                 subject.checkPermissions(uri);
             }
         } catch (Exception ex) {

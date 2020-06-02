@@ -2,10 +2,11 @@ package study.springboot.shiro.token.auth;
 
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
-//@Component("securitySource")
+@Component("securitySource")
 public class SecuritySourceFactoryBean implements FactoryBean<ArrayList<String>> {
 
     @Override
@@ -15,10 +16,10 @@ public class SecuritySourceFactoryBean implements FactoryBean<ArrayList<String>>
 
     @Override
     public ArrayList<String> getObject() throws Exception {
-        ArrayList<String> permissionLt = Lists.newArrayList();
-        permissionLt.add("/res/add");
-        permissionLt.add("/res/modify");
-        return permissionLt;
+        ArrayList<String> securitySource = Lists.newArrayList();
+        securitySource.add("/res/add");
+        securitySource.add("/res/modify");
+        return securitySource;
     }
 
     @Override
