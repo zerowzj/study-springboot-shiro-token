@@ -80,10 +80,10 @@ public class TokenRealm extends AuthorizingRealm {
         //创建Shiro用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
-        // 第一个参数随便放，可以是user，在系统中任意位置可以获取改对象;
-        // 第二个参数必须是密码
+        // 第一个参数随便放，可以是user，在系统中任意位置可以获取改对象;（身份）
+        // 第二个参数必须是密码（凭证）
         // 第三个参数当前Realm的名称，因为可能存在多个Realm
-        SimpleAuthenticationInfo authInfo = new SimpleAuthenticationInfo(userDetails, token, getName());
-        return authInfo;
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userDetails, token, getName());
+        return info;
     }
 }

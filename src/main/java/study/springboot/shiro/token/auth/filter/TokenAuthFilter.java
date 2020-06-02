@@ -11,7 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * 先执行 isAccessAllowed 再执行 onAccessDenied
+ * 先执行 isAccessAllowed，再执行 onAccessDenied
  */
 @Slf4j
 @Component
