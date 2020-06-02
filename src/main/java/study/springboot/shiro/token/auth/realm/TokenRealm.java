@@ -30,8 +30,7 @@ public class TokenRealm extends AuthorizingRealm {
     private RedisClient redisClient;
 
     /**
-     * 该Realm仅支持自定义的CustomAuthToken类型Token
-     * 其他类型处理将会抛出异常
+     * 该Realm仅支持CustomAuthToken类型Token，其他类型处理将会抛出异常
      */
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -44,13 +43,15 @@ public class TokenRealm extends AuthorizingRealm {
      * （★）获取用户认证信息
      * ====================
      * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
-     * new IncorrectCredentialsException();
-     * new LockedAccountException();
+     * UnknownAccountException
+     * IncorrectCredentialsException
+     * LockedAccountException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
-        //获取token值
+
+        //获取token
         CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
         String token = (String) customAuthToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
@@ -65,11 +66,10 @@ public class TokenRealm extends AuthorizingRealm {
         UserInfo userInfo = JsonUtils.fromJson(text, UserInfo.class);
         UserInfoContext.set(userInfo);
 
-
         //
         UserDetails userDetails = new UserDetails();
         userDetails.setPermissionSet(Sets.newHashSet("/res/add"));
-        //创建Shiro用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
+        //创建认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
         // 第一个参数随便放，可以是user，在系统中任意位置可以获取改对象;（身份）
