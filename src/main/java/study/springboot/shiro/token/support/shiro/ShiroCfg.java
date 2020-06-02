@@ -1,13 +1,11 @@
 package study.springboot.shiro.token.support.shiro;
 
 import com.google.common.collect.Maps;
-import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,27 +74,24 @@ public class ShiroCfg {
     /**
      * ====================
      * Shiro Filter
+     * ====================
      * Filter Chain定义说明
      * （1）一个URL可以配置多个Filter，使用逗号分隔
      * （2）当设置多个过滤器时，全部验证通过，才视为通过
-     * ====================
      */
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shiroFilter(@Autowired SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         //（▲）安全管理器
         factoryBean.setSecurityManager(securityManager);
-
         //（▲）过滤器
         Map<String, Filter> filterMap = Maps.newLinkedHashMap();
         filterMap.put("token_authc", tokenAuthFilter);
         factoryBean.setFilters(filterMap);
-
         //（▲）登录跳转
 //        factoryBean.setSuccessUrl("/welcome");           //认证成功
 //        factoryBean.setLoginUrl("/unauthorized");        //未认证
         factoryBean.setUnauthorizedUrl("/login"); //未授权
-
         //（▲）设置规则
         //使用LinkedHashMap，因为拦截有先后顺序
         Map<String, String> filterChainDefinition = Maps.newLinkedHashMap();

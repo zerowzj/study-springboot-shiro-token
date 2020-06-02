@@ -51,13 +51,13 @@ public class TokenRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
 
-        //获取token
+        //******************** 获取token ********************
         CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
         String token = (String) customAuthToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
-        //根据token获取用户信息
+        //******************** 获取用户信息 ********************
         String key = RedisKeys.keyOfToken(token);
         String text = redisClient.get(key);
         if (Strings.isNullOrEmpty(text)) {
@@ -69,7 +69,8 @@ public class TokenRealm extends AuthorizingRealm {
         //
         UserDetails userDetails = new UserDetails();
         userDetails.setPermissionSt(Sets.newHashSet("/res/add"));
-        //创建认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
+        //******************** 创建认证对象 ********************
+        //注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
         // 第一个参数随便放，可以是user，在系统中任意位置可以获取改对象;（身份）
@@ -94,7 +95,7 @@ public class TokenRealm extends AuthorizingRealm {
             throw new RuntimeException("获取用户授权信息失败");
         }
 
-        //创建授权对象
+        //******************** 创建授权对象 ********************
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //设置权限
         info.addStringPermissions(userDetails.getPermissionSt());

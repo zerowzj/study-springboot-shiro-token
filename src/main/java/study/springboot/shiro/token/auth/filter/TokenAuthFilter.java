@@ -13,9 +13,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 
-/**
- * 先执行 isAccessAllowed，再执行 onAccessDenied
- */
 @Slf4j
 @Component
 public class TokenAuthFilter extends AccessControlFilter {
@@ -49,7 +46,7 @@ public class TokenAuthFilter extends AccessControlFilter {
         //******************** 该步骤主要是通过token代理登录shiro ********************
         //获取token值
         String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
-        //生成AuthenticationToken，然后代理登录
+        //生成AuthenticationToken，然后代理登录和认证
         CustomAuthToken authToken = new CustomAuthToken(token);
         try {
             //（★）委托给Realm进行登录和授权验证
