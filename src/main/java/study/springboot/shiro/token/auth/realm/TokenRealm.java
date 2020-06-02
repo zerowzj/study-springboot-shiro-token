@@ -69,6 +69,7 @@ public class TokenRealm extends AuthorizingRealm {
         //
         UserDetails userDetails = new UserDetails();
         userDetails.setPermissionSt(Sets.newHashSet("/res/add"));
+
         //******************** 创建认证对象 ********************
         //注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
