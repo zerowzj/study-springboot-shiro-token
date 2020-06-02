@@ -15,8 +15,4 @@ public class UserInfoContext {
     public static void remove() {
         LOCAL.remove();
     }
-
-    public static Long getUaId() {
-        return get().getUaId();
-    }
 }

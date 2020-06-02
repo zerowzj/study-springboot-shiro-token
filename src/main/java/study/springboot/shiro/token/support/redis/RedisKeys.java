@@ -6,7 +6,7 @@ public class RedisKeys {
 
     private static final String SEPARATOR = ":";
 
-    private static final String APP = "mgr_web";
+    private static final String APP = "shiro";
 
     private static String format(String... key) {
         return Joiner.on(SEPARATOR).skipNulls().join(key);
