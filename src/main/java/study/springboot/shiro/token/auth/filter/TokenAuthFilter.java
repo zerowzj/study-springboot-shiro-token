@@ -4,14 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
-import study.springboot.shiro.token.support.redis.RedisClient;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.util.List;
 
 /**
  * 先执行 isAccessAllowed，再执行 onAccessDenied
@@ -21,6 +22,15 @@ import javax.servlet.ServletResponse;
 public class TokenAuthFilter extends AccessControlFilter {
 
     private static String X_TOKEN = "x-token";
+
+    private List<String> securitySource;
+
+    @PostConstruct
+    public void init() {
+        securitySource = Lists.newArrayList();
+        securitySource.add("/res/add");
+        securitySource.add("/res/modify");
+    }
 
     /**
      * isAccessAllowed：表示是否允许访问
@@ -55,7 +65,9 @@ public class TokenAuthFilter extends AccessControlFilter {
             subject.login(authToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
-            subject.checkPermissions(uri);
+            if (securitySource.contains(uri)) {
+                subject.checkPermissions(uri);
+            }
         } catch (Exception ex) {
             //log.error(ex.getLocalizedMessage(), ex);
             //登录失败不用处理后面的过滤器会处理并且能通过@ControllerAdvice统一处理相关异常
