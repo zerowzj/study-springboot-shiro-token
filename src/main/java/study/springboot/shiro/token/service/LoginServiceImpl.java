@@ -20,7 +20,7 @@ public class LoginServiceImpl implements LoginService {
     public Result login(String username, String password) {
         String token = "666666666";
         String key = RedisKeys.keyOfToken(token);
-        String value = "";
+        String value = "123123";
         redisClient.set(key, value);
 
         Map<String, Object> data = Maps.newHashMap();
