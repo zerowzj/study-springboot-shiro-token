@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.service;
+package study.springboot.shiro.token.service.login;
 
 import study.springboot.shiro.token.support.result.Result;
 

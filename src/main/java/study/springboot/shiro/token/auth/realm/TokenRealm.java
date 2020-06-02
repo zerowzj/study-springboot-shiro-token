@@ -1,6 +1,5 @@
 package study.springboot.shiro.token.auth.realm;
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -8,18 +7,20 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.assertj.core.util.Lists;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.springboot.shiro.token.auth.token.CustomAuthToken;
+import study.springboot.shiro.token.service.popedom.PopedomService;
 import study.springboot.shiro.token.support.redis.RedisClient;
 import study.springboot.shiro.token.support.redis.RedisKeys;
 import study.springboot.shiro.token.support.session.UserInfo;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 import study.springboot.shiro.token.support.utils.JsonUtils;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * 主要用于Shiro的登录认证以及权限认证
@@ -30,6 +31,8 @@ public class TokenRealm extends AuthorizingRealm {
 
     @Autowired
     private RedisClient redisClient;
+    @Autowired
+    private PopedomService popedomService;
 
     /**
      * 该Realm仅支持CustomAuthToken类型Token，其他类型处理将会抛出异常
@@ -42,7 +45,7 @@ public class TokenRealm extends AuthorizingRealm {
 
     /**
      * ====================
-     * （★）获取用户认证信息
+     * （★）获取认证信息
      * ====================
      * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
      * UnknownAccountException
@@ -79,7 +82,7 @@ public class TokenRealm extends AuthorizingRealm {
 
     /**
      * ====================
-     * （★）获取用户授权信息
+     * （★）获取授权信息
      * ====================
      */
     @Override
@@ -93,9 +96,14 @@ public class TokenRealm extends AuthorizingRealm {
         }
 
         //******************** 创建授权对象 ********************
+        Long userId = userInfo.getUserId();
+        List<String> functionLt = popedomService.getFunctionLt(userId);
+        List<String> permissionSt = Lists.newArrayList();
+        functionLt.forEach(e -> {
+            permissionSt.add(e);
+        });
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //设置权限
-        Set<String> permissionSt = Sets.newHashSet("/res/add");
         info.addStringPermissions(permissionSt);
         //设置角色
         //info.addRole("admin");

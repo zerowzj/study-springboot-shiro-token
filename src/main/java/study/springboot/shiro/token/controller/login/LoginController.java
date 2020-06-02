@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import study.springboot.shiro.token.service.LoginService;
+import study.springboot.shiro.token.service.login.LoginService;
 import study.springboot.shiro.token.support.result.Result;
 
 @RestController

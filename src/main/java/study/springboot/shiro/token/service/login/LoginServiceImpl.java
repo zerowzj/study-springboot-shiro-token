@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.service;
+package study.springboot.shiro.token.service.login;
 
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
