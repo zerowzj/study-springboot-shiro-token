@@ -23,10 +23,10 @@ public class TokenAuthFilter extends AccessControlFilter {
     private static String X_TOKEN = "x-token";
 
     @Autowired
-    private ArrayList<String> securitySource111;
+    private ArrayList<String> securitySource;
 
     /**
-     * isAccessAllowed：表示是否允许访问
+     * 表示是否允许访问
      *
      * @param mappedValue：就是[urls]配置中拦截器参数部分，如果允许访问返回true，否则false；
      * @return true:交给下一个filter进行处理; false:会往下执行onAccessDenied
@@ -39,7 +39,7 @@ public class TokenAuthFilter extends AccessControlFilter {
     }
 
     /**
-     * onAccessDenied：表示当访问拒绝时是否已经处理了
+     * 表示当访问拒绝时是否已经处理了
      *
      * @return true表示需要继续处理；false表示该拦截器实例已经处理了，将直接返回即可
      */
@@ -58,7 +58,7 @@ public class TokenAuthFilter extends AccessControlFilter {
             subject.login(authToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
-            if (securitySource111.contains(uri)) {
+            if (securitySource.contains(uri)) {
                 subject.checkPermissions(uri);
             }
         } catch (Exception ex) {

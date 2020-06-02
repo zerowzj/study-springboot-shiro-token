@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
-@Component("securitySource")
+@Component
 public class SecuritySourceFactoryBean implements FactoryBean<ArrayList<String>> {
 
     @Override
