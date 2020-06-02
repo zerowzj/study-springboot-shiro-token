@@ -24,7 +24,7 @@ public class LoginServiceImpl implements LoginService {
         //
         String key = RedisKeys.keyOfToken(token);
         UserInfo userInfo = new UserInfo();
-        userInfo.setUaId(900001L);
+        userInfo.setUserId(900001L);
         redisClient.set(key, JsonUtils.toJson(userInfo));
         //
         Map<String, Object> data = Maps.newHashMap();

@@ -42,30 +42,6 @@ public class TokenRealm extends AuthorizingRealm {
 
     /**
      * ====================
-     * 获取用户授权信息
-     * ====================
-     */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        log.info(">>>>>>>>>> 获取用户授权信息");
-        //获取当前用户信息，已经登录后可以使用在任意的地方获取用户的信息
-        UserDetails user = (UserDetails) principals.getPrimaryPrincipal();
-        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
-        if (userDetails == null) {
-            throw new RuntimeException("获取用户授权信息失败");
-        }
-
-        //创建授权对象
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        //设置权限
-        info.addStringPermissions(userDetails.getPermissionSet());
-        //设置角色
-        //info.addRole("admin");
-        return info;
-    }
-
-    /**
-     * ====================
      * 获取用户认证信息
      * 每次请求的时候都会调用这个方法验证token是否失效和用户是否被锁定
      * new IncorrectCredentialsException();
@@ -89,10 +65,11 @@ public class TokenRealm extends AuthorizingRealm {
         }
         UserInfo userInfo = JsonUtils.fromJson(text, UserInfo.class);
         UserInfoContext.set(userInfo);
+
+
         //
         UserDetails userDetails = new UserDetails();
         userDetails.setPermissionSet(Sets.newHashSet("/res/list", "/res/add"));
-
         //创建Shiro用户认证对象，注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //这里放入UserDetails对象后面授权可以取出来
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
@@ -100,6 +77,30 @@ public class TokenRealm extends AuthorizingRealm {
         // 第二个参数必须是密码（凭证）
         // 第三个参数当前Realm的名称，因为可能存在多个Realm
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userDetails, token, getName());
+        return info;
+    }
+
+    /**
+     * ====================
+     * 获取用户授权信息
+     * ====================
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        log.info(">>>>>>>>>> 获取用户授权信息");
+        //获取当前用户信息，已经登录后可以使用在任意的地方获取用户的信息
+        UserDetails user = (UserDetails) principals.getPrimaryPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityUtils.getSubject().getPrincipal();
+        if (userDetails == null) {
+            throw new RuntimeException("获取用户授权信息失败");
+        }
+
+        //创建授权对象
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //设置权限
+        info.addStringPermissions(userDetails.getPermissionSet());
+        //设置角色
+        //info.addRole("admin");
         return info;
     }
 }

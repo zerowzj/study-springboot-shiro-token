@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 public class UserInfo implements Serializable {
 
-    private Long uaId;
+    private Long userId;
 }

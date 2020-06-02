@@ -40,7 +40,7 @@ public class GlobalErrorController implements ErrorController {
                 data.put("desc", "无权限");
             } else {
                 data.put("code", "9999");
-                data.put("desc", exception.getMessage());
+                data.put("desc", exception.getCause().getMessage());
             }
         } else {
             if (statusCode == 500) {
