@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 /**
- * FactoryBean<T>泛型为List时报错，为ArrayList正常
+ * FactoryBean<T>泛型，使用List报错，使用ArrayList正常
  */
 @Component
 public class SecuritySourceFactoryBean implements FactoryBean<ArrayList<String>> {
