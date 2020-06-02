@@ -27,7 +27,7 @@ public class SecuritySourceFactoryBean implements FactoryBean<ArrayList<String>>
     public ArrayList<String> getObject() throws Exception {
         //获取
         List<String> data = popedomService.getFunctionLt();
-        //
+        //遍历
         ArrayList<String> securitySource = Lists.newArrayList();
         data.forEach(e -> {
             securitySource.add(e);
