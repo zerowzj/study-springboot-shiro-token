@@ -34,7 +34,7 @@ public class ShiroCfg {
      * ====================
      */
     @Bean
-    public DefaultSessionManager sessionManager() {
+    public SessionManager sessionManager() {
         DefaultSessionManager sessionManager = new DefaultSessionManager();
         //禁用掉会话调度器，因为禁用掉了会话，所以没必要再定期过期会话了
         sessionManager.setSessionValidationSchedulerEnabled(false);
@@ -91,14 +91,14 @@ public class ShiroCfg {
         //（▲）登录跳转
 //        factoryBean.setSuccessUrl("/welcome");           //认证成功
 //        factoryBean.setLoginUrl("/unauthorized");        //未认证
-        factoryBean.setUnauthorizedUrl("/login"); //未授权
-        //（▲）设置规则
+        //factoryBean.setUnauthorizedUrl("/login"); //未授权
+        //（▲）过滤器链
         //使用LinkedHashMap，因为拦截有先后顺序
         Map<String, String> filterChainDefinition = Maps.newLinkedHashMap();
         //登录接口不需要认证
         filterChainDefinition.put("/login", "anon");
         //其他资源地址全部需要通过代理登录步骤，注意顺序，必须先进过无状态代理登录后，后面的权限和角色认证才能使用
-        //必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
+        //必须放在所有权限设置的最后，不然会导致所有url都被拦截
         filterChainDefinition.put("/**", "token_authc");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinition);
 
@@ -106,8 +106,8 @@ public class ShiroCfg {
     }
 
     /**
-     * 保证实现了Shiro内部lifecycle函数的bean执行
-     * （1）使用该bean时，必须使用@Bean而不能使用@Component
+     * 保证实现了Shiro内部Lifecycle函数的Bean执行
+     * （1）使用类时，必须使用@Bean而不能使用@Component来定义Bean
      */
 //    @Bean
 //    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
