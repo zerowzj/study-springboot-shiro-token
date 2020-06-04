@@ -52,7 +52,7 @@ public class TokenAuthFilter extends AccessControlFilter {
         try {
             //（★）委托给Realm进行登录和授权验证
             Subject subject = getSubject(request, response);
-            //登录
+            //认证
             subject.login(customToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
