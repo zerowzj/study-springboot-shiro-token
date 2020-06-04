@@ -6,7 +6,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import study.springboot.shiro.token.auth.token.CustomAuthToken;
+import study.springboot.shiro.token.auth.token.CustomToken;
 import study.springboot.shiro.token.support.session.UserInfo;
 import study.springboot.shiro.token.support.session.UserInfoContext;
 
@@ -48,12 +48,12 @@ public class TokenAuthFilter extends AccessControlFilter {
         //获取token值
         String token = WebUtils.toHttp(request).getHeader(X_TOKEN);
         //生成AuthenticationToken，然后代理登录和认证
-        CustomAuthToken authToken = new CustomAuthToken(token);
+        CustomToken customToken = new CustomToken(token);
         try {
             //（★）委托给Realm进行登录和授权验证
             Subject subject = getSubject(request, response);
             //登录
-            subject.login(authToken);
+            subject.login(customToken);
             //授权
             String uri = WebUtils.toHttp(request).getRequestURI();
             if (securitySource.contains(uri)) {

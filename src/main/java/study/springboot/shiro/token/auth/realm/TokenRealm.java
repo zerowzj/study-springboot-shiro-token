@@ -12,7 +12,7 @@ import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import study.springboot.shiro.token.auth.token.CustomAuthToken;
+import study.springboot.shiro.token.auth.token.CustomToken;
 import study.springboot.shiro.token.service.popedom.PopedomService;
 import study.springboot.shiro.token.support.redis.RedisClient;
 import study.springboot.shiro.token.support.redis.RedisKeys;
@@ -40,7 +40,7 @@ public class TokenRealm extends AuthorizingRealm {
     @Override
     public boolean supports(AuthenticationToken token) {
         log.info(">>>>>>>>>> supports");
-        return token instanceof CustomAuthToken;
+        return token instanceof CustomToken;
     }
 
     /**
@@ -56,8 +56,8 @@ public class TokenRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
         //******************** 获取token ********************
-        CustomAuthToken customAuthToken = (CustomAuthToken) authenticationToken;
-        String token = (String) customAuthToken.getPrincipal();
+        CustomToken customToken = (CustomToken) authenticationToken;
+        String token = (String) customToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
