@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.support.shiro;
+package study.springboot.shiro.token.auth;
 
 import com.google.common.collect.Maps;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;

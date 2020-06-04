@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.auth;
+package study.springboot.shiro.token.auth.source;
 
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.FactoryBean;
