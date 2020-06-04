@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import study.springboot.shiro.token.auth.filter.TokenAuthFilter;
 import study.springboot.shiro.token.auth.realm.TokenRealm;
-import study.springboot.shiro.token.auth.subject.CustomSubjectFactory;
+import study.springboot.shiro.token.auth.subject.TokenSubjectFactory;
 
 import javax.servlet.Filter;
 import java.util.Map;

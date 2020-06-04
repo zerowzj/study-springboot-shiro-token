@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import study.springboot.shiro.token.auth.filter.TokenAuthFilter;
 import study.springboot.shiro.token.auth.realm.TokenRealm;
-import study.springboot.shiro.token.auth.subject.CustomSubjectFactory;
+import study.springboot.shiro.token.auth.subject.TokenSubjectFactory;
 
 import javax.servlet.Filter;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class ShiroCfg {
     @Autowired
     private TokenRealm tokenRealm;
     @Autowired
-    private CustomSubjectFactory customSubjectFactory;
+    private TokenSubjectFactory tokenSubjectFactory;
     @Autowired
     private TokenAuthFilter tokenAuthFilter;
 
@@ -54,7 +54,7 @@ public class ShiroCfg {
         //（▲）Realm
         securityManager.setRealm(tokenRealm);
         //（▲）Subject工厂
-        securityManager.setSubjectFactory(customSubjectFactory);
+        securityManager.setSubjectFactory(tokenSubjectFactory);
         //（▲）禁用Session作为存储策略的实现
         DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = (DefaultSessionStorageEvaluator) subjectDAO.getSessionStorageEvaluator();
