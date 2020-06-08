@@ -2,7 +2,12 @@ package study.springboot.shiro.token.auth.realm;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -35,7 +40,11 @@ public class TokenRealm extends AuthorizingRealm {
     private PopedomService popedomService;
 
     /**
-     * 该Realm仅支持CustomAuthToken类型Token，其他类型处理将会抛出异常
+     * ====================
+     * （★）AuthenticationToken
+     * ====================
+     * 该Realm仅支持CustomAuthToken类型Token
+     * 其他类型处理将会抛出异常
      */
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -61,6 +70,7 @@ public class TokenRealm extends AuthorizingRealm {
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
+
         //******************** 获取用户信息 ********************
         String key = RedisKeys.keyOfToken(token);
         String text = redisClient.get(key);
@@ -76,7 +86,9 @@ public class TokenRealm extends AuthorizingRealm {
         //参数1随便放，可以是对象，在系统中任意位置可以获取该对象;（身份）
         //参数2必须是密码（凭证）
         //参数3当前Realm的名称，因为可能存在多个Realm
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userInfo, token, getName());
+        Object principal = userInfo;
+        Object credentials = token;
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, credentials, getName());
         return info;
     }
 
@@ -95,13 +107,15 @@ public class TokenRealm extends AuthorizingRealm {
             throw new RuntimeException("获取用户授权信息失败");
         }
 
-        //******************** 创建授权对象 ********************
+        //******************** 获取用户权限 ********************
         Long userId = userInfo.getUserId();
         List<String> functionLt = popedomService.getFunctionLt(userId);
         List<String> permissionSt = Lists.newArrayList();
         functionLt.forEach(e -> {
             permissionSt.add(e);
         });
+
+        //******************** 创建授权对象 ********************
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //设置权限
         info.addStringPermissions(permissionSt);
