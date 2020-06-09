@@ -1,7 +1,6 @@
 package study.springboot.shiro.token.auth.realm;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -88,15 +87,16 @@ public class TokenRealm extends AuthorizingRealm {
         UserInfoContext.set(userInfo);
 
         //******************** <3>.创建认证对象 ********************
-        //注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
-        //参数1随便放，可以是对象，在系统中任意位置可以获取该对象;（身份）
+        //（▲）认证实体信息，可以是username，也可以是用户的实体对象
+        Object principal = userInfo;
+        //（▲）该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对
+        Object credentials = token;
+        log.info("i am token {}", token);
+        String realmName = getName();
+        //参数1随便放，可以是对象，在系统中任意位置可以获取该对象（身份）
         //参数2必须是密码（凭证）
         //参数3当前Realm的名称，因为可能存在多个Realm
-        //认证实体信息，可以是username，也可以是用户的实体对象
-        Object principal = userInfo;
-        Object credentials = token;
-        String realmName = getName();
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, credentials, realmName);
         return info;
     }

@@ -2,6 +2,7 @@ package study.springboot.shiro.token.support.exception;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,10 @@ public class GlobalErrorController implements ErrorController {
             if (cause instanceof UnauthorizedException) {
                 data.put("code", "4001");
                 data.put("desc", "无权限");
-            } else {
+            } else if (cause instanceof IncorrectCredentialsException){
+                data.put("code", "9999");
+                data.put("desc", "认证错误");
+            }else {
                 data.put("code", "9999");
                 data.put("desc", exception.getCause().getMessage());
             }

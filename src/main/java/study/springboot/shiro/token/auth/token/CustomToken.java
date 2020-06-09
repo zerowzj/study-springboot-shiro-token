@@ -1,8 +1,14 @@
 package study.springboot.shiro.token.auth.token;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.shiro.authc.AuthenticationToken;
 
 public class CustomToken implements AuthenticationToken {
+
+    @Setter
+    @Getter
+    private String abc;
 
     private String token;
 
