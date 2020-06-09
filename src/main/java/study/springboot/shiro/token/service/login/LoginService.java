@@ -4,5 +4,5 @@ import study.springboot.shiro.token.support.result.Result;
 
 public interface LoginService {
 
-    Result login(String username, String password);
+    String login(String username, String password);
 }
