@@ -39,6 +39,11 @@ public class TokenRealm extends AuthorizingRealm {
     @Autowired
     private PopedomService popedomService;
 
+    @Override
+    public String getName() {
+        return "";
+    }
+
     /**
      * ====================
      * （★）AuthenticationToken
