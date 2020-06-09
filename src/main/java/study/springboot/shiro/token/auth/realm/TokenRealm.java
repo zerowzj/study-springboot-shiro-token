@@ -64,14 +64,14 @@ public class TokenRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(">>>>>>>>>> 获取用户认证信息");
-        //******************** 获取token ********************
+        //******************** <1>.获取token ********************
         CustomToken customToken = (CustomToken) authenticationToken;
         String token = (String) customToken.getPrincipal();
         if (StringUtils.isEmpty(token)) {
             throw new UnknownAccountException("token为空");
         }
 
-        //******************** 获取用户信息 ********************
+        //******************** <2>.获取用户信息 ********************
         String key = RedisKeys.keyOfToken(token);
         String text = redisClient.get(key);
         if (Strings.isNullOrEmpty(text)) {
@@ -80,7 +80,7 @@ public class TokenRealm extends AuthorizingRealm {
         UserInfo userInfo = JsonUtils.fromJson(text, UserInfo.class);
         UserInfoContext.set(userInfo);
 
-        //******************** 创建认证对象 ********************
+        //******************** <3>.创建认证对象 ********************
         //注意该对象的密码将会传递至后续步骤与前面登陆的subject的密码进行比对。
         //CustomAuthToken会与登录时候的token进行验证，这里就放入登录的即可
         //参数1随便放，可以是对象，在系统中任意位置可以获取该对象;（身份）
@@ -88,7 +88,8 @@ public class TokenRealm extends AuthorizingRealm {
         //参数3当前Realm的名称，因为可能存在多个Realm
         Object principal = userInfo;
         Object credentials = token;
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, credentials, getName());
+        String realmName = getName();
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, credentials, realmName);
         return info;
     }
 
@@ -100,14 +101,15 @@ public class TokenRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.info(">>>>>>>>>> 获取用户授权信息");
-        //获取当前用户信息，登录后可以使用在任意的地方获取用户的信息
+        //******************** <1>.获取当前用户信息 ********************
+        //登录后可以使用在任意的地方获取用户的信息
         UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();
         SecurityUtils.getSubject().getPrincipal();
         if (userInfo == null) {
             throw new RuntimeException("获取用户授权信息失败");
         }
 
-        //******************** 获取用户权限 ********************
+        //******************** <2>.获取用户权限 ********************
         Long userId = userInfo.getUserId();
         List<String> functionLt = popedomService.getFunctionLt(userId);
         List<String> permissionSt = Lists.newArrayList();
@@ -115,7 +117,7 @@ public class TokenRealm extends AuthorizingRealm {
             permissionSt.add(e);
         });
 
-        //******************** 创建授权对象 ********************
+        //******************** <3>.创建授权对象 ********************
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //设置权限
         info.addStringPermissions(permissionSt);
