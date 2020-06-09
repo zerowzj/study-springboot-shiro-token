@@ -1,4 +1,4 @@
-package study.springboot.shiro.token.auth.filter;
+package study.springboot.shiro.token.auth;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

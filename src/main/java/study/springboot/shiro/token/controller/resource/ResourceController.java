@@ -22,10 +22,10 @@ public class ResourceController {
 
     @PostMapping("/list")
     public Result list() {
-        POOL.execute(() -> {
-            UserInfo userInfo = UserInfoContext.get();
-            log.info("===>{}", userInfo.getUserId());
-        });
+//        POOL.execute(() -> {
+//            UserInfo userInfo = UserInfoContext.get();
+//            log.info("===>{}", userInfo.getUserId());
+//        });
 
 //        Thread t = new Thread(() -> {
 //            UserInfo userInfo = UserInfoContext.get();

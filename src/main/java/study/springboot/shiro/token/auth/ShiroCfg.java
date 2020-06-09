@@ -6,6 +6,7 @@ import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -18,6 +19,8 @@ import study.springboot.shiro.token.auth.realm.TokenRealm;
 import study.springboot.shiro.token.auth.subject.TokenSubjectFactory;
 
 import javax.servlet.Filter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -38,6 +41,8 @@ public class ShiroCfg {
     @Bean
     public Authenticator authenticator() {
         ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+        List<Realm> realmLt = Arrays.asList(tokenRealm);
+        authenticator.setRealms(realmLt);
 //        authenticator.setAuthenticationStrategy();
         return authenticator;
     }
@@ -66,10 +71,10 @@ public class ShiroCfg {
     public SecurityManager securityManager(SessionManager sessionManager, Authenticator authenticator) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）单Realm
-        securityManager.setRealm(tokenRealm);
-        //（▲）多Realm时
-//        List<Realm> realmLt = Arrays.asList(tokenRealm);
-//        securityManager.setRealms(realmLt);
+//        securityManager.setRealm(tokenRealm);
+        //（▲）多Realm，配置认证器
+        List<Realm> realmLt = Arrays.asList(tokenRealm);
+        securityManager.setRealms(realmLt);
 //        securityManager.setAuthenticator(authenticator);
         //（▲）Subject工厂
         securityManager.setSubjectFactory(tokenSubjectFactory);
