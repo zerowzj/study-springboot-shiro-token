@@ -2,11 +2,9 @@ package study.springboot.shiro.token.auth;
 
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.Authenticator;
-import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -19,8 +17,6 @@ import study.springboot.shiro.token.auth.realm.TokenRealm;
 import study.springboot.shiro.token.auth.subject.TokenSubjectFactory;
 
 import javax.servlet.Filter;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -56,11 +52,12 @@ public class ShiroCfg {
     @Bean
     public SecurityManager securityManager(SessionManager sessionManager, Authenticator authenticator) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        //（▲）Realm
-        List<Realm> realmLt = Arrays.asList(tokenRealm);
-        securityManager.setRealms(realmLt);
-        //（▲）多Realm时，验证器
-        securityManager.setAuthenticator(authenticator);
+        //（▲）单Realm
+        securityManager.setRealm(tokenRealm);
+        //（▲）多Realm时
+//        List<Realm> realmLt = Arrays.asList(tokenRealm);
+//        securityManager.setRealms(realmLt);
+//        securityManager.setAuthenticator(authenticator);
         //（▲）Subject工厂
         securityManager.setSubjectFactory(tokenSubjectFactory);
         //（▲）禁用Session作为存储策略的实现
@@ -77,18 +74,6 @@ public class ShiroCfg {
 //        securityManager.setAuthorizer(authorizer);
 
         return securityManager;
-    }
-
-    /**
-     * ====================
-     * <p>
-     * ====================
-     */
-    @Bean
-    public Authenticator authenticator() {
-        ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
-//        authenticator.setAuthenticationStrategy();
-        return authenticator;
     }
 
     /**

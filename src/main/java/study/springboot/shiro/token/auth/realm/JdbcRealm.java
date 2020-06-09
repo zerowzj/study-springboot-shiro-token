@@ -9,6 +9,13 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 public class JdbcRealm extends AuthorizingRealm {
 
+    private static final String REALM_NAME = "JdbcRealm";
+
+    @Override
+    public String getName() {
+        return REALM_NAME;
+    }
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         return null;

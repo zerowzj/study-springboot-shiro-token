@@ -34,6 +34,8 @@ import java.util.List;
 @Component
 public class TokenRealm extends AuthorizingRealm {
 
+    private static final String REALM_NAME = "TokenRealm";
+
     @Autowired
     private RedisClient redisClient;
     @Autowired
@@ -41,7 +43,7 @@ public class TokenRealm extends AuthorizingRealm {
 
     @Override
     public String getName() {
-        return "";
+        return REALM_NAME;
     }
 
     /**
@@ -91,6 +93,7 @@ public class TokenRealm extends AuthorizingRealm {
         //参数1随便放，可以是对象，在系统中任意位置可以获取该对象;（身份）
         //参数2必须是密码（凭证）
         //参数3当前Realm的名称，因为可能存在多个Realm
+        //认证实体信息，可以是username，也可以是用户的实体对象
         Object principal = userInfo;
         Object credentials = token;
         String realmName = getName();

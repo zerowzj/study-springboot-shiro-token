@@ -55,13 +55,11 @@ public class TokenAuthFilter extends AccessControlFilter {
             //认证
             subject.login(customToken);
             //授权
-            String uri = WebUtils.toHttp(request).getRequestURI();
-            if (securitySource.contains(uri)) {
-                subject.checkPermissions(uri);
-            }
+//            String uri = WebUtils.toHttp(request).getRequestURI();
+//            if (securitySource.contains(uri)) {
+//                subject.checkPermissions(uri);
+//            }
         } catch (Exception ex) {
-            //log.error(ex.getLocalizedMessage(), ex);
-            //登录失败不用处理后面的过滤器会处理并且能通过@ControllerAdvice统一处理相关异常
             throw ex;
         }
         return true;
