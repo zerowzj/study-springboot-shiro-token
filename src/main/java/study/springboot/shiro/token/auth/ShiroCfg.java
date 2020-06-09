@@ -22,11 +22,11 @@ import java.util.Map;
 public class ShiroCfg {
 
     @Autowired
-    private TokenRealm tokenRealm;
-    @Autowired
     private TokenSubjectFactory tokenSubjectFactory;
     @Autowired
     private TokenAuthFilter tokenAuthFilter;
+    @Autowired
+    private TokenRealm tokenRealm;
 
     /**
      * ====================
@@ -48,7 +48,7 @@ public class ShiroCfg {
      * 安全管理器
      * ====================
      */
-    @Bean("securityManager")
+    @Bean
     public SecurityManager securityManager(SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //（▲）Realm
