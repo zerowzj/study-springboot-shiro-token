@@ -82,7 +82,7 @@ public class TokenRealm extends AuthorizingRealm {
         String key = RedisKeys.keyOfToken(token);
         String text = redisClient.get(key);
         if (Strings.isNullOrEmpty(text)) {
-            throw new IncorrectCredentialsException("token过期或错误");
+            throw new IncorrectCredentialsException("token错误或过期");
         }
         UserInfo userInfo = JsonUtils.fromJson(text, UserInfo.class);
         UserInfoContext.set(userInfo);
@@ -112,7 +112,7 @@ public class TokenRealm extends AuthorizingRealm {
         //******************** <1>.获取当前用户信息 ********************
         //登录后可以使用在任意的地方获取用户的信息
         UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();
-        SecurityUtils.getSubject().getPrincipal();
+         //SecurityUtils.getSubject().getPrincipal();
         if (userInfo == null) {
             throw new RuntimeException("获取用户授权信息失败");
         }

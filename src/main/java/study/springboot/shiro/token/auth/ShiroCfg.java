@@ -2,6 +2,7 @@ package study.springboot.shiro.token.auth;
 
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.Authenticator;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
@@ -28,6 +29,18 @@ public class ShiroCfg {
     private TokenAuthFilter tokenAuthFilter;
     @Autowired
     private TokenRealm tokenRealm;
+
+    /**
+     * ====================
+     * 认证器（多Realm时使用）
+     * ====================
+     */
+    @Bean
+    public Authenticator authenticator() {
+        ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+//        authenticator.setAuthenticationStrategy();
+        return authenticator;
+    }
 
     /**
      * ====================
